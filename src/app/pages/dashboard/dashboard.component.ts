@@ -10,66 +10,37 @@ export class DashboardComponent implements OnInit {
   constructor() { }
   ngOnInit() {
   }
-  drawSomething() {
-    alert('CLICK!!');
 
+  // -----------------------------------------------------------------------------------------------------
+  // FUNCIÓN QUE PINTA UN CUADRO CUANDO LEE UN CLICK EN EL CANVAS
+  // -----------------------------------------------------------------------------------------------------
+  drawSomething(event) {
+    const canvas: any = document.getElementById('stage');
+    if (canvas.getContext) { // CHECKEA QUE EL CONTEXTO EXISTA
+      const ctx = canvas.getContext('2d');
+      let i = event.offsetX; // UBICA LA COORDENADA X
+      let j = event.offsetY; // UBICA LA COORDENADA Y
+      ctx.fillStyle = 'rgb(160, 140, 160)'; // DEFINE EL COLOR DE LA FIGUTA
+      ctx.fillRect(i, j, 90, 90); // DEFINE LA POSICIÒN A PINTAR
+    }
   }
+  // -----------------------------------------------------------------------------------------------------
   // FUNCIÓN QUE SE ENCARGA DE CREAR EL TABLERO DE JUEGO
+  // -----------------------------------------------------------------------------------------------------
   drawRectable( tamano: number) { // RECIBE EL TAMAÑO DEL TABLERO: N X N
     const canvas: any = document.getElementById('stage');
+    canvas.width = tamano * 90;  // VARIABLES QUE ACTUALIZAN LOS VALORES DEL CANVAS DE ACUERDO AL TAMAÑO DEL TABLERO
+    canvas.height = tamano * 90;
     console.log(tamano);
     if (canvas.getContext) {
       const ctx = canvas.getContext('2d');
       ctx.clearRect(0, 0, canvas.width, canvas.height); // LIMPIA EL CANVAS
-      // CICLO QUE SE ENCARGA DE INSERTAR CADA FICHA
-      for ( let i = 1; i <= tamano; i++) {
-        for (let j = 1; j <= tamano; j++) { // culo culo
-          ctx.strokeRect(5 + i * 90, 5 + j * 90, 90, 90); // ES UNA FICHA CON FORMATO: (x,y,width,height)
-          // this.capClick();
-          // CONDICIÓN PARA PROBAR QUE SE LOGRA PINTAR UNA FICHA EN UNA POSICIÓN DADA
-/*           if ( i === 3 && j === 3) {
-            ctx.fillStyle = 'rgb(160, 140, 160)';
-            ctx.fillRect(5 + i * 90, 5 + j * 90, 90, 90);
-          }
-          if ( i === 2 && j === 5) {
-            ctx.fillStyle = 'rgb(140, 160, 100)';
-            ctx.fillRect(5 + i * 90, 5 + j * 90, 90, 90);
-          } */
+      for ( let i = 0; i <= tamano; i++) { // CICLO QUE SE ENCARGA DE INSERTAR CADA FICHA
+        for (let j = 0; j <= tamano; j++) {
+           ctx.strokeRect(i * 90, j * 90, 90, 90); // ES UNA FICHA CON FORMATO: (x,y,width,height)
         }
       }
     }
   }
 
-  // FUNCIÓN PARA CAPTURAR EL CLICK
-/*   capClick () {
-    let canvas: any = document.getElementById('stage');
-    canvas.addEventListener('click', function(event) {
-    let xy = convertEventCoords(event, canvas);
-    canvas.fillStyle = 'rgb(160, 140, 160)';
-    canvas.getContext('2d').fillRect(5 + xy.x * 90 , 5 + xy.y * 90 , 90, 90);
-    } );
-  }
-
-} */
-/*  drawRectable() {
-    let canvas = document.getElementById('stage');
-    if (canvas.getContext) {
-      let ctx = canvas.getContext('2d');
-      let tamano = 6; // TAMAÑO DEL TABLERO: N X N
-      // CICLO QUE SE ENCARGA DE INSERTAR CADA FICHA
-      for ( let i = 1; i <= tamano; i++) {
-        for (let j = 1; j <= tamano; j++) {
-          ctx.strokeRect(5 + i * 90, 5 + j * 90, 90, 90); // ES UNA FICHA CON FORMATO: (x,y,width,height)
-          // CONDICIÓN PARA PROBAR QUE SE LOGRA PINTAR UNA FICHA EN UNA POSICIÓN DADA
-          if ( i === 3 && j === 3) {
-            ctx.fillStyle = 'rgb(160, 140, 160)';
-            ctx.fillRect(5 + i * 90, 5 + j * 90, 90, 90);
-          }
-          if ( i === 2 && j === 5) {
-            ctx.fillStyle = 'rgb(140, 160, 100)';
-            ctx.fillRect(5 + i * 90, 5 + j * 90, 90, 90);
-          }
-        }
-      }
-    }
-  } */ }
+}

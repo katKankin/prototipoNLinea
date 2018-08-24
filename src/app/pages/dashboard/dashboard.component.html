@@ -5,7 +5,6 @@
                 <!-- <app-incrementador (actualizaValor)="progreso1 = $event" nombre="Tamaño Tablero"></app-incrementador> -->
                 <br>
                 <app-incrementador (actualizaValor)="tam = $event" nombre="Tamaño Tablero" [progreso]="tam"></app-incrementador>
-                <!-- <button class="btn btn-dark" type="submit">Crear tablero</button> -->
                 <button class="btn btn-dark" type="submit" (click)="drawRectable(tam)">CREAR TABLERO</button>
             </div>
         </div>
@@ -13,5 +12,7 @@
 </div>
 
 <!-- GENERA EL CANVAS PARA LA CREACIÓN DEL TABLERO-->
-<canvas #canvasRef id="stage" width="1000" height="1000" (click)="drawSomething()"> 
-</canvas>
+<div style="text-align:center">
+    <canvas #canvasRef center id="stage" width="1000" height="1000" (click)="drawSomething($event)"> 
+    </canvas>
+</div>

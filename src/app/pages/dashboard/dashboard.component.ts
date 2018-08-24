@@ -23,7 +23,7 @@ export class DashboardComponent implements OnInit {
       ctx.clearRect(0, 0, canvas.width, canvas.height); // LIMPIA EL CANVAS
       // CICLO QUE SE ENCARGA DE INSERTAR CADA FICHA
       for ( let i = 1; i <= tamano; i++) {
-        for (let j = 1; j <= tamano; j++) {
+        for (let j = 1; j <= tamano; j++) { // culo culo
           ctx.strokeRect(5 + i * 90, 5 + j * 90, 90, 90); // ES UNA FICHA CON FORMATO: (x,y,width,height)
           // this.capClick();
           // CONDICIÓN PARA PROBAR QUE SE LOGRA PINTAR UNA FICHA EN UNA POSICIÓN DADA

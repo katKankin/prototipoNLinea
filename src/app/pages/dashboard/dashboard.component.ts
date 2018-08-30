@@ -6,6 +6,9 @@ import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef }
 })
 export class DashboardComponent implements OnInit {
   tam: number = 4;
+  cant: number = 2; // guarda la cantidad de fichas de gane
+  manejoFichas: number = 1; // para el cambio de color de fichas
+
   // @ViewChild('canvasRef') canvasRef: ElementRef; referencia elementos html
   constructor() { }
   ngOnInit() {
@@ -28,8 +31,15 @@ export class DashboardComponent implements OnInit {
       for (let x = 0; x <= this.tam; x++) {// voy a suponer que el tablero es de tam 4
         for (let y = 0; y <= this.tam; y++) {
           if ( (i >= x * 90 && i <= x * 90 + 90) && (j >= y * 90 && j <= y * 90 + 90) ) {
-            ctx.fillStyle = 'rgb(160, 140, 160)'; // DEFINE EL COLOR DE LA FIGUTA
-            ctx.fillRect(x * 90, y * 90, 90, 90); // DEFINE LA POSICIÒN A PINTAR´
+            if ( this.manejoFichas % 2 === 0) {
+              ctx.fillStyle = 'rgb(160, 140, 160)'; // DEFINE EL COLOR DE LA FIGUTA
+              ctx.fillRect(x * 90, y * 90, 90, 90); // DEFINE LA POSICIÒN A PINTAR´
+              this.manejoFichas = this.manejoFichas + 1;
+            } else {
+              ctx.fillStyle = 'rgb(190, 100, 80)'; // DEFINE EL COLOR DE LA FIGUTA
+              ctx.fillRect(x * 90, y * 90, 90, 90); // DEFINE LA POSICIÒN A PINTAR´
+              this.manejoFichas = this.manejoFichas + 1;
+            }
           }
         }
       }
@@ -51,11 +61,15 @@ export class DashboardComponent implements OnInit {
       ctx.clearRect(0, 0, canvas.width, canvas.height); // LIMPIA EL CANVAS
       for ( let i = 0; i <= tamano; i++) { // CICLO QUE SE ENCARGA DE INSERTAR CADA FICHA
         for (let j = 0; j <= tamano; j++) {
-          ctx.strokeRect(i * 90, j * 90, 90, 90); // ES UNA FICHA CON FORMATO: (x,y,width,height)
+            ctx.strokeRect(i * 90, j * 90, 90, 90); // ES UNA FICHA CON FORMATO: (x,y,width,height)
         }
       }
     }
     this.tam = tamano;
+  }
+
+  winCondition(cantidad: number) {
+   console.log('Cantidad fichas de gane: ', cantidad);
   }
 
 }

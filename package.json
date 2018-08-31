@@ -21,11 +21,12 @@
     "@angular/platform-browser-dynamic": "^6.1.0",
     "@angular/router": "^6.1.0",
     "angular-route": "^1.7.3",
+    "angularfire": "^2.3.0",
     "angularfire2": "^5.0.0-rc.12",
     "canvas-utils": "^0.8.0",
     "chart.js": "^2.7.2",
     "core-js": "^2.5.4",
-    "firebase": "^5.4.1",
+    "firebase": "^5.4.2",
     "ng2-charts": "^1.6.0",
     "rxjs": "^6.0.0",
     "zone.js": "~0.8.26"

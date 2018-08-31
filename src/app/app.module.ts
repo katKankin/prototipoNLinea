@@ -20,6 +20,7 @@ import { handleActions } from 'canvas-utils';
 import { ServiceModule } from './services/service.module';
 // checkear en los imports de abajo
 
+// Login
 import { environment } from '../environments/environment';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
@@ -27,6 +28,7 @@ import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AuthService } from './services/auth.service';
 import { HttpModule } from '@angular/http';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
+
 
 @NgModule({
   declarations: [
@@ -45,7 +47,7 @@ import { AngularFirestoreModule } from 'angularfire2/firestore';
     AngularFireAuthModule,
     FormsModule,
     HttpModule,
-    AngularFirestoreModule, 
+    AngularFirestoreModule,
     AngularFireAuthModule,
   ],
   providers: [AuthService],

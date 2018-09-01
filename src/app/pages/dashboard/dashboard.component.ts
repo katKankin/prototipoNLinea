@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { ThrowStmt } from '../../../../node_modules/@angular/compiler';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -8,9 +9,11 @@ export class DashboardComponent implements OnInit {
   tam: number = 4;
   cant: number = 2; // guarda la cantidad de fichas de gane
   manejoFichas: number = 1; // para el cambio de color de fichas
-  turno : number = 1 ;//1:J1 - 2:J2
+  turno: number = 1 ;//1:J1 - 2:J2
   matrix:number[][]=new Array();//REPLICAR DE LA MATRIZ DE JUEGO
-  
+  fichasJ1: number = 0;
+  fichasJ2: number = 0;
+  x: number = 0;
   // @ViewChild('canvasRef') canvasRef: ElementRef; referencia elementos html
   constructor() { }
   ngOnInit() {
@@ -36,6 +39,7 @@ export class DashboardComponent implements OnInit {
       let ctx = canvas.getContext('2d');
       let i = event.offsetX; // UBICA LA COORDENADA X
       let j = event.offsetY; // UBICA LA COORDENADA Y
+      let xAnt = 0;
     //  alert('POS X: ' + (i) + 'POS Y: ' + (j) );
    //   ctx.fillRect(1 * 90, 2 * 90, 90, 90); // pinta pos 1, x= 1*90, y=2 * 90
    /*    if ( (i >= 1 * 90 && i <= 1 * 90 + 90) && (j >= 2 * 90 && j <= 2 * 90 + 90) ) {
@@ -46,22 +50,50 @@ export class DashboardComponent implements OnInit {
         for (let y = 0; y <= this.tam; y++) {
           if ( (i >= x * 90 && i <= x * 90 + 90) && (j >= y * 90 && j <= y * 90 + 90) ) {
             if (this.matrix[y][x] == 0) { //VERIFICA QUE LA CASILLA NO TIENE FICHA
-              if (this.turno == 1) {//JUGADOR 1
-                this.matrix[y][x] = 1;//MARCA LA EN LA MATRIZ CON LA FICHA JUGADOR 1
-                this.turno = 2;//CAMBIO DE TURNO
-                ctx.fillStyle = 'rgb(160, 140, 160)'; // DEFINE EL COLOR DE LA FIGUTA
-                ctx.fillRect(x * 90, y * 90, 90, 90);
+              if (this.turno == 1) {//FICHA JUGADOR 1
+                if((y+1 == this.tam)&&(this.matrix[y][x] == 0)){ //VERIFICA PARA COLOCAR LA FICHA EN LA ULTIMA FILA J1
+                  this.matrix[y][x]=1 //COLOCA FICHA 1
+                  ctx.fillStyle = 'rgb(160, 140, 160)'; // DEFINE EL COLOR DE LA FIGUTA
+                  ctx.fillRect(x * 90, y * 90, 90, 90);
+                  this.turno = 2;//CAMBIO DE TURNO
+                  this.verificarGane()
+                }
+
+                else if(this.matrix[y+1][x]!=0){ //JUGAR SOBRE UNA FICHA 
+                  this.matrix[y][x]=1 //FICHA JUGADOR 1
+                  ctx.fillStyle = 'rgb(160, 140, 160)';
+                  ctx.fillRect(x * 90, y * 90, 90, 90);
+                  this.turno = 2;//CAMBIO DE TURNO
+                  this.verificarGane()
+                }
+
+                else{
+                  alert("Jugada invalida, debe de tener una ficha abajo")
+                } 
               }
+
               else if (this.turno == 2) {//JUGADOR 2
-                this.matrix[y][x] = 2//MARCA LA EN LA MATRIZ CON LA FICHA JUGADOR 2
-                this.turno = 1//CAMBIO DE TURNO
-                ctx.fillStyle = 'rgb(190, 100, 80)'; // DEFINE EL COLOR DE LA FIGUTA
-                ctx.fillRect(x * 90, y * 90, 90, 90);
+                if((y+1 == this.tam)&&(this.matrix[y][x] == 0)){ //VERIFICA PARA COLOCAR LA FICHA EN LA ULTIMA FILA J2
+                  this.matrix[y][x]=2 //FICHA JUGADOR 2
+                  ctx.fillStyle = 'rgb(190, 100, 80)'; // DEFINE EL COLOR DE LA FIGUTA
+                  ctx.fillRect(x * 90, y * 90, 90, 90);
+                  this.turno = 1;//CAMBIO DE TURNO
+                }
+                else if(this.matrix[y+1][x]!=0){//JUGAR SOBRE UNA FICHA 
+                  this.matrix[y][x]=2 //FICHA JUGADOR 2
+                  ctx.fillStyle = 'rgb(190, 100, 80)';
+                  ctx.fillRect(x * 90, y * 90, 90, 90);
+                  this.turno = 1;//CAMBIO DE TURNO
+                }
+
+                else{
+                  alert("Jugada invalida, debe de tener una ficha abajo")
+                } 
               }
-              //console.log(this.matrix)
             }
-            else { 
-              alert("Jugada no válida")
+
+            else{
+              alert("Jugada invalida")
             }
             /*if ( this.manejoFichas % 2 === 0) {
               ctx.fillStyle = 'rgb(160, 140, 160)'; // DEFINE EL COLOR DE LA FIGUTA
@@ -99,7 +131,30 @@ export class DashboardComponent implements OnInit {
   }
 
   winCondition(cantidad: number) {
+    this.cant = cantidad
    console.log('Cantidad fichas de gane: ', cantidad);
   }
 
+  cont:number=0
+  verificarGane() {
+    console.log(this.matrix)
+    //for(let e=0;e<this.tam;e++){
+      while(this.x <this.tam){
+        console.log("x: ", this.x)
+        if(this.matrix[3][this.x]==1){//ejex se modifica, valida solo en la fila 0 y horizontal
+          this.fichasJ1++
+          console.log("fichasJ1: ", this.fichasJ1)
+        }
+        else{
+          //console.log("Jugador 2")
+          this.fichasJ1=0
+          //this.fichasJ2++
+        }
+        //console.log("fichasJ1A: ", this.fichasJ1)
+        this.x++
+      }
+      this.fichasJ1=0
+      this.x=0
+    //}
+  }
 }

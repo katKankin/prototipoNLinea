@@ -13,7 +13,6 @@ export class DashboardComponent implements OnInit {
   matrix: number[][] = new Array(); // REPLICAR DE LA MATRIZ DE JUEGO
   fichasJ1: number = 0;
   fichasJ2: number = 0;
-  x: number = 0;
   // @ViewChild('canvasRef') canvasRef: ElementRef; referencia elementos html
   constructor() { }
   ngOnInit() {
@@ -56,13 +55,15 @@ export class DashboardComponent implements OnInit {
                   ctx.fillStyle = 'rgb(160, 140, 160)'; // DEFINE EL COLOR DE LA FIGUTA
                   ctx.fillRect(x * 90, y * 90, 90, 90);
                   this.turno = 2; // CAMBIO DE TURNO
-                  this.verificarGane();
+                  this.verificarGaneHorizontal();
+                  this.verificarGaneVertical();
                 } else if (this.matrix[y + 1][x] != 0) { // JUGAR SOBRE UNA FICHA 
                   this.matrix[y][x] = 1; // FICHA JUGADOR 1
                   ctx.fillStyle = 'rgb(160, 140, 160)';
                   ctx.fillRect(x * 90, y * 90, 90, 90);
                   this.turno = 2; // CAMBIO DE TURNO
-                  this.verificarGane();
+                  this.verificarGaneHorizontal();
+                  this.verificarGaneVertical();
                 } else {
                   alert( 'Jugada invalida, debe de tener una ficha abajo');
                 }
@@ -72,11 +73,15 @@ export class DashboardComponent implements OnInit {
                   ctx.fillStyle = 'rgb(190, 100, 80)'; // DEFINE EL COLOR DE LA FIGUTA
                   ctx.fillRect(x * 90, y * 90, 90, 90);
                   this.turno = 1; // CAMBIO DE TURNO
+                  this.verificarGaneHorizontal();
+                  this.verificarGaneVertical();
                 } else if (this.matrix[y + 1][x] != 0) { // JUGAR SOBRE UNA FICHA
                   this.matrix[y][x] = 2; // FICHA JUGADOR 2
                   ctx.fillStyle = 'rgb(190, 100, 80)';
                   ctx.fillRect(x * 90, y * 90, 90, 90);
                   this.turno = 1; // CAMBIO DE TURNO
+                  this.verificarGaneHorizontal();
+                  this.verificarGaneVertical();
                 } else {
                   alert('Jugada invalida, debe de tener una ficha abajo');
                 }
@@ -124,25 +129,50 @@ export class DashboardComponent implements OnInit {
    console.log('Cantidad fichas de gane: ', cantidad);
   }
 
-  cont: number = 0;
-  verificarGane() {
-    console.log(this.matrix);
-    // for(let e=0;e<this.tam;e++){
-      while (this.x < this.tam) {
-        console.log('x: ', this.x);
-        if (this.matrix[3][this.x] == 1) { // ejex se modifica, valida solo en la fila 0 y horizontal
-          this.fichasJ1++;
-          console.log( 'fichasJ1: ' , this.fichasJ1);
-        } else {
-          // console.log("Jugador 2")
-          this.fichasJ1 = 0;
-          // this.fichasJ2++
+  verificarGaneHorizontal() {
+    //console.log(this.matrix)
+    for ( let i = 0; i < this.tam; i++) {
+      for ( let e = 0; e < this.tam; e++){
+        if (( this.matrix[i][e] == 1) && (this.matrix[i][e+1] == 1)) { // VERIFICA GANE JUGADOR 1 SOLO PARA 2 FICHAS JUNTAS
+          this.fichasJ1++
+          this.matrix[i][e] = 3 // CAMBIA DE 1 A 3 PARA CONTAR LAS FICHAS SOLO 1 VEZ
+          //console.log("fichasJ1: ", this.fichasJ1)
+          if (this.fichasJ1+1 >= this.cant) { // MAYOR O IGUAL PORQUE EL GANE SE PUEDE FORMAR CON UNA FICHA MAS
+            alert("Jugador 1 ha ganado")
+          }
+        } else if (( this.matrix[i][e] == 2) && (this.matrix[i][e+1] == 2)) { // VERIFICA GANE JUGADOR 2 SOLO PARA 2 FICHAS JUNTAS 
+          this.fichasJ2++
+          this.matrix[i][e] = 4 // CAMBIA DE 2 A 4 PARA CONTAR LAS FICHAS SOLO 1 VEZ
+          //console.log("fichasJ2: ", this.fichasJ2)
+          if (this.fichasJ2+1 >= this.cant) { // MAYOR O IGUAL PORQUE EL GANE SE PUEDE FORMAR CON UNA FICHA MAS
+            alert("Jugador 2 ha ganado")
+          }
         }
-        // console.log("fichasJ1A: ", this.fichasJ1)
-        this.x++;
       }
-      this.fichasJ1 = 0;
-      this.x = 0;
-    // }
+    }
+  }
+
+  // VERIFICA EL GANE EN VERTICAL PERO TIENE LA CANTIDAD DE FICHAS PARA EL GANE FIJO
+  verificarGaneVertical(){
+    //console.log(this.matrix)
+    for (let i = 0; i < this.tam; i++) {
+      for (let e = 0; e < this.tam; e++) {
+        if ((this.matrix[i][e] == 1) && (this.matrix[i-1][e] == 1)) { // VERIFICA GANE JUGADOR 1 SOLO PARA 2 FICHAS JUNTAS
+          this.fichasJ1++
+          this.matrix[i][e] = 3 // CAMBIA DE 1 A 3 PARA CONTAR LAS FICHAS SOLO 1 VEZ
+          // console.log("fichasJ1: ", this.fichasJ1)
+          if (this.fichasJ1+1 >= this.cant) { // MAYOR O IGUAL PORQUE EL GANE SE PUEDE FORMAR CON UNA FICHA MAS
+            alert("Jugador 1 ha ganado")
+          }
+        } else if (( this.matrix[i][e] == 2) && (this.matrix[i-1][e] == 2)) { // VERIFICA GANE JUGADOR 2 SOLO PARA 2 FICHAS JUNTAS
+          this.fichasJ2++
+          this.matrix[i][e] = 4 // CAMBIA DE 2 A 4 PARA CONTAR LAS FICHAS SOLO 1 VEZ
+          // console.log("fichasJ2: ", this.fichasJ2)
+          if (this.fichasJ2+1 >= this.cant) { // MAYOR O IGUAL PORQUE EL GANE SE PUEDE FORMAR CON UNA FICHA MAS
+            alert("Jugador 2 ha ganado")
+          }
+        }
+      }
+    }
   }
 }

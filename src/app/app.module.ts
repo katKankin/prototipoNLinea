@@ -30,6 +30,7 @@ import { HttpModule } from '@angular/http';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 
 
+
 @NgModule({
   declarations: [
     AppComponent,

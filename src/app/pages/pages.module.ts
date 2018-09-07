@@ -24,15 +24,13 @@ import { AccoutSettingsComponent } from './accout-settings/accout-settings.compo
         PagesComponent,
         DashboardComponent,
         ProgressComponent,
-        Graficas1Component,
         IncrementadorComponent,
         GraficoDonaComponent,
         AccoutSettingsComponent
     ],
     exports: [
         DashboardComponent,
-        ProgressComponent,
-        Graficas1Component
+        ProgressComponent
     ],
     imports: [
         SharedModule,

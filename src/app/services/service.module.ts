@@ -7,17 +7,21 @@ import { CommonModule } from '@angular/common';
 import {
   SettingsService,
   SidebarService,
-  SharedService
+  SharedService,
+  GameService
 } from './service.index';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    HttpClientModule
   ],
   providers: [
     SettingsService,
-  SidebarService,
-  SharedService
+    SidebarService,
+    SharedService,
+    GameService
 
   ],
   declarations: []

@@ -18,23 +18,15 @@ export class DashboardComponent implements OnInit {
   matrix: number[][] = new Array(); // matriz lógica (backend)
   fichasJ1: number = 0;
   fichasJ2: number = 0;
-  game: Game;
+  // VER MODELO models.game
+  game: Game; // VARIABLE DE TIPO MODELO JUEGO (AQUÍ SE CARGAN LOS DATOS DEL JSON)
 
+  // SE INYECTA SERVICE AL COMPONENTE: (VER SERVICES game.service.ts)
   constructor( public _gaming: GameService) { }
   ngOnInit() {
-    // se refresca la vista cuando se hace un nuevo tablero
-    this.game = new Game([], 0);
-    // se crea la matriz lógica en el back-end
-    /* this._gaming.someFunction(this.game).subscribe(
-      result => {
-        this.game.matrix = result.matrix;
-        this.game.size = result.size;
-        this.drawRectable(this.game.size);
-        console.log(result);
 
-      }
-    ); */
-    // aquí se debe refrescar la matriz
+    this.game = new Game([], 0); // ignore esto
+
   }
 
    // FUNCION PARA REPLICAR EL JUEGO EN UNA MATRIZ
@@ -130,7 +122,7 @@ export class DashboardComponent implements OnInit {
     canvas.width = tamano * 90;  // VARIABLES QUE ACTUALIZAN LOS VALORES DEL CANVAS DE ACUERDO AL TAMAÑO DEL TABLERO
     canvas.height = tamano * 90;
     console.log(tamano);
-    this.crearMatriz(); // llenando matriz lógica
+    this.crearMatriz(); // llenando matriz lógica esto lo debe hacer el backend
     // se debe cambiar este ciclo x un ngFor y con una variable cargada desde el backend
     if (canvas.getContext) {
       const ctx = canvas.getContext('2d');
@@ -144,11 +136,14 @@ export class DashboardComponent implements OnInit {
     this.tam = tamano;
     this.game.size = this.tam; // posible redundancia
     console.log(this.game.size);
+
+    // SERVICIO QUE SE INYECTA EN EL COMP DASHBOARD
+    // ESTE SE ENCARGA DE LLAMAR AL BACK END
+    // RECIBE EL PARÁMETRO game QUE ES DE TIPO game (game.model)
     this._gaming.someFunction(this.game).subscribe(
-      result => {
-        this.game.matrix = result.matrix;
-        // this.drawRectable(this.game.size);
-        // test .json
+      result => { // CARGA EL JSON CON LOS DATOS QUE RESPONDE EL BACK END
+        this.game.matrix = result.matrix; // SE LO ASIGNO A LA VAR TIPO game (game.model)
+        // this.drawRectable(this.game.size); // AQUÍ SE DEBE CREAR LA MATRIZ CON ESTE PARAMETRO FALTA IMPLEMENTACION
         console.log(result);
       },
       error => {
@@ -174,7 +169,7 @@ export class DashboardComponent implements OnInit {
           if (this.fichasJ1 + 1 >= this.cant) { // MAYOR O IGUAL PORQUE EL GANE SE PUEDE FORMAR CON UNA FICHA MAS
             alert('Jugador 1 ha ganado');
           }
-        } else if (( this.matrix[i][e] === 2) && (this.matrix[i][e + 1] === 2)) { // VERIFICA GANE JUGADOR 2 SOLO PARA 2 FICHAS JUNTAS 
+        } else if (( this.matrix[i][e] === 2) && (this.matrix[i][e + 1] === 2)) { // VERIFICA GANE JUGADOR 2 SOLO PARA 2 FICHAS JUNTAS
           this.fichasJ2++;
           this.matrix[i][e] = 4; // CAMBIA DE 2 A 4 PARA CONTAR LAS FICHAS SOLO 1 VEZ
           // console.log("fichasJ2: ", this.fichasJ2)

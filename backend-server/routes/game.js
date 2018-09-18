@@ -35,19 +35,11 @@ app.post('/setGame', function(req, res) {
 
     // EN LA VAR REQ TENGO LOS DATOS JSON DEL REQUEST
     console.log(req.body.size);
-    game = new Game(req.body.size);
+    game = new Game(req.body.size, req.body.toWin);
+    game.createBoard();
     // setteo la configuración del tablero que viene desde el front req.body.n
     //game.matrix = req.body.matrix; // se asigna lo que viene desde el front, probar desde angular
-    // ejm estático:
-    // esto iría en un game.createBoard(size: number);
-    for (let i = 0; i < game.size; i++) {
-        game.matrix[i] = new Array(game.size);
-        for (let j = 0; j < game.size; j++) {
-            game.matrix[i][j] = 0;
 
-        }
-
-    }
     console.log(game.matrix);
     // AQUÍ DEVUELVO EL JSON Y SI TODO SALE BIEN
     // SE SETEA EL TIPO DE STATUS QUE INDICA EL ESTADO DEL REQUEST

@@ -4,16 +4,16 @@
             <div class="card-body">
                 <!-- <app-incrementador (actualizaValor)="progreso1 = $event" nombre="Tamaño Tablero"></app-incrementador> -->
                 <br>
-                <app-incrementador (actualizaValor)="tam = $event" nombre="Tamaño Tablero" [progreso]="tam"></app-incrementador>
-                <button class="btn btn-dark" type="submit" (click)="drawRectable(tam)">CREAR TABLERO</button>
+                <app-incrementador (actualizaValor)="game.size = $event" nombre="Tamaño Tablero" [progreso]="game.size"></app-incrementador>
+                <button class="btn btn-dark" type="submit" (click)="drawRectable(game.size)">CREAR TABLERO</button>
             </div>
         </div>
     </div>
     <div class="col-6">
         <div class="card">
             <div class="card-body">
-                <app-incrementador (actualizaValor)="cant = $event" nombre="Fichas de gane" [progreso]="cant"></app-incrementador>
-                <button class="btn btn-dark" type="submit" (click)="winCondition(cant)">FIJAR</button>
+                <app-incrementador (actualizaValor)="game.toWin = $event" nombre="Fichas de gane" [progreso]="game.toWin"></app-incrementador>
+                <button class="btn btn-dark" type="submit" (click)="winCondition(game.toWin)">FIJAR</button>
             </div>
         </div>
     </div>

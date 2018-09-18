@@ -9,7 +9,7 @@ import { Game } from '../../models/game.model';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  turno: number = 1 ; // 1:J1 - 2:J2
+  turno: number = 1 ; // 1:J1 - 2:J2 //
   matrix: number[][] = new Array(); // -
   fichasJ1: number = 1;
   fichasJ2: number = 1;

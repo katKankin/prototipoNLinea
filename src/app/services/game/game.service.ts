@@ -13,7 +13,7 @@ export class GameService {
     public http: HttpClient
   ) { }
   // RECIBE VAR DE TIPO game (game.model) Y DEVUELVE UN OBSERVABLE
-  someFunction(game: Game): Observable<any> {
+  newGame(game: Game): Observable<any> {
     const params = JSON.stringify(game); // ASIGNO LOS DATOS A UN JSON
     // console.log(params);
     const headers = new HttpHeaders().set('Content-Type', 'application/json'); // NO PREGUNTE DEJE ASÍ.. JAJA
@@ -21,6 +21,17 @@ export class GameService {
     // VAR QUE REFERENCIA AL ENDPOINT Q SE NECESITA DEL BACK END
     // EN ESTE CASO LLAMARÁ AL ENDPOINT "http://localhost:3000/game/setgame"
     const url = URL_SERVICIOS + '/game/setgame';
+    console.log('GENERATING REQUEST...\n');
+    // ENVIO EL ENDPONT Y EL JSON, RETORNA UN "RESPONSE" CON LOS DATOS
+    // PROCESADOS EN EL BACK END (VER BACK END)
+    return this.http.post(url, params, {headers: headers}); // enviando game retornando observador para manejar response
+    // conexión a servidor
+    // alert('someFunction()');
+  }
+  playGame(game: Game): Observable<any> {
+    const params = JSON.stringify(game); // ASIGNO LOS DATOS A UN JSON
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    const url = URL_SERVICIOS + '/game/makePlay';
     console.log('GENERATING REQUEST...\n');
     // ENVIO EL ENDPONT Y EL JSON, RETORNA UN "RESPONSE" CON LOS DATOS
     // PROCESADOS EN EL BACK END (VER BACK END)

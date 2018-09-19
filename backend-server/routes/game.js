@@ -15,7 +15,7 @@ app.use(cors());
 // usando modelo de juego
 // instancia del modelo 
 var Game = require('../models/Game');
-let game;
+var game;
 
 // endpoints
 // BÁSICAMENTE DICE CUANDO SE HAGA UN .get A ESTA RUTA HAGA ESTO:
@@ -33,14 +33,13 @@ app.get('/', function(req, res) {
 // FRONT END
 app.post('/setGame', function(req, res) {
 
-    // EN LA VAR REQ TENGO LOS DATOS JSON DEL REQUEST
-    console.log(req.body.size);
+    // console.log(req.body.size);
     game = new Game(req.body.size, req.body.toWin);
     game.createBoard();
     // setteo la configuración del tablero que viene desde el front req.body.n
     //game.matrix = req.body.matrix; // se asigna lo que viene desde el front, probar desde angular
 
-    console.log(game.matrix);
+    // console.log(game.matrix);
     // AQUÍ DEVUELVO EL JSON Y SI TODO SALE BIEN
     // SE SETEA EL TIPO DE STATUS QUE INDICA EL ESTADO DEL REQUEST
     // AQUÍ ESTOY FORMANDO MI .JSON COMO QUIERO Q SE RECIBA EN EL FRONT END.
@@ -50,6 +49,22 @@ app.post('/setGame', function(req, res) {
         mensaje: 'OK SET GAME!!',
         matrix: game.matrix,
         size: game.size
+    });
+});
+
+app.post('/makePlay', function(req, res) {
+    /* game.coordX = req.body.coordX;
+    game.coordY = req.body.coordY; */
+    game.tryPlay(req.body.coordX, req.body.coordY);
+    res.status(200).json({
+        ok: true,
+        mensaje: 'OK PLAY GAME!!',
+        coordX: game.coordX,
+        coordY: game.coordY,
+        matrix: game.matrix,
+        jugada: game.jugada,
+        win: game.win,
+        turno: game.turno
     });
 });
 module.exports = app;

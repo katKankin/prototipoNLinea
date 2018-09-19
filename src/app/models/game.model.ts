@@ -7,7 +7,12 @@ export class Game {
         public toWin: number = 4,
         public fichasJ1: number,
         public fichasJ2: number,
-        public turno: number
+        public turno: number,
+        public jugada: boolean,
+        public win: boolean,
+        public coordX: number= 0,
+        public coordY: number= 0
+
 
     ) { }
 

@@ -9,10 +9,10 @@ import { Game } from '../../models/game.model';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  turno: number = 1 ; // 1:J1 - 2:J2 //
+/*   turno: number = 1 ; // 1:J1 - 2:J2 //
   matrix: number[][] = new Array(); // -
   fichasJ1: number = 1;
-  fichasJ2: number = 1;
+  fichasJ2: number = 1; */
   game: Game;
 
   control = 0; // VARIABLE PARA COLOCAR UNA FICHA UNA FILA ANTERIOR SI LA ACTUAL ESTA LLENA
@@ -21,7 +21,7 @@ export class DashboardComponent implements OnInit {
   constructor( public _gaming: GameService) { }
   ngOnInit() {
 
-    this.game = new Game([], 4, 4, 1, 1, 1); // ignore esto
+    this.game = new Game([], 4, 4, 1, 1, 1, true, false, 0, 0); // ignore esto
 
   }
 
@@ -38,43 +38,53 @@ export class DashboardComponent implements OnInit {
       for (let x = 0; x <= this.game.size; x++) {
         for (let y = 0; y <= this.game.size; y++) {
           if ( (i >= x * 90 && i <= x * 90 + 90) && (j >= y * 90 && j <= y * 90 + 90) ) {
-            if (this.matrix[y][x] === 0) { // VERIFICA QUE LA CASILLA NO TIENE FICHA
-              if (this.turno === 1) {// FICHA JUGADOR 1
-                if ((y + 1  === this.game.size) && (this.matrix[y][x] === 0)) { // VERIFICA PARA COLOCAR LA FICHA EN LA ULTIMA FILA J1
-                  this.matrix[y][x] = 1; // COLOCA FICHA 1
-                  ctx.fillStyle = 'rgb(160, 140, 160)'; // DEFINE EL COLOR DE LA FIGUTA
-                  ctx.fillRect(x * 90, y * 90, 90, 90);
-                  this.turno = 2; // CAMBIO DE TURNO
-                  this.verificarGane();
-                } else if (this.matrix[y + 1][x] !== 0) { // JUGAR SOBRE UNA FICHA
-                  this.matrix[y][x] = 1; // FICHA JUGADOR 1
-                  ctx.fillStyle = 'rgb(160, 140, 160)';
-                  ctx.fillRect(x * 90, y * 90, 90, 90);
-                  this.turno = 2; // CAMBIO DE TURNO
-                  this.verificarGane();
-                } else {
-                  alert( 'Jugada invalida, debe de tener una ficha abajo');
-                }
-              } else if (this.turno === 2) { // JUGADOR 2
-                if ((y + 1 === this.game.size) && (this.matrix[y][x] === 0)) { // VERIFICA PARA COLOCAR LA FICHA EN LA ULTIMA FILA J2
-                  this.matrix[y][x] = 2; // FICHA JUGADOR 2
-                  ctx.fillStyle = 'rgb(190, 100, 80)'; // DEFINE EL COLOR DE LA FIGUTA
-                  ctx.fillRect(x * 90, y * 90, 90, 90);
-                  this.turno = 1; // CAMBIO DE TURNO
-                  this.verificarGane();
-                } else if (this.matrix[y + 1][x] !== 0) { // JUGAR SOBRE UNA FICHA
-                  this.matrix[y][x] = 2; // FICHA JUGADOR 2
-                  ctx.fillStyle = 'rgb(190, 100, 80)';
-                  ctx.fillRect(x * 90, y * 90, 90, 90);
-                  this.turno = 1; // CAMBIO DE TURNO
-                  this.verificarGane();
-                } else {
-                  alert('Jugada invalida, debe de tener una ficha abajo');
-                }
+            this.game.coordX = x;
+            this.game.coordY = y;
+            // console.log('COORDS F.E:\n', this.game.coordX, this.game.coordY);
+            this._gaming.playGame(this.game).subscribe(
+              result => { // CARGA EL JSON CON LOS DATOS QUE RESPONDE EL BACK END
+                this.game.matrix = result.matrix; // SE LO ASIGNO A LA VAR TIPO game (game.model)
+                this.game.coordX = result.coordX;
+                this.game.coordY = result.coordY;
+                this.game.jugada = result.jugada;
+                this.game.win = result.win;
+                this.game.turno = result.turno;
+              },
+              error => {
+                console.log(<any>error);
               }
+
+            );
+            // console.log('COORDS B.E:\n', this.game.coordX, this.game.coordY);
+          if (this.game.win === true) {
+            if (this.game.turno === 1) {
+              ctx.fillStyle = 'rgb(160, 140, 160)'; // DEFINE EL COLOR DE LA FIGUTA
+              ctx.fillRect(x * 90, y * 90, 90, 90);
+              alert('JUGADOR 1 GANA');
             } else {
-              alert('Jugada invalida');
+              ctx.fillStyle = 'rgb(100, 100, 100)'; // DEFINE EL COLOR DE LA FIGUTA
+              ctx.fillRect(x * 90, y * 90, 90, 90);
+              alert('JUGADOR 2 GANA');
+
             }
+          } else {
+            if (this.game.jugada === false) {
+              alert('JUGADA INVALIDA');
+            } else {
+              if (this.game.turno === 2) {
+                ctx.fillStyle = 'rgb(160, 140, 160)'; // DEFINE EL COLOR DE LA FIGUTA
+                ctx.fillRect(x * 90, y * 90, 90, 90);
+
+              } else {
+                ctx.fillStyle = 'rgb(100, 100, 100)'; // DEFINE EL COLOR DE LA FIGUTA
+                ctx.fillRect(x * 90, y * 90, 90, 90);
+
+              }
+
+            }
+
+
+          }
           }
         }
       }
@@ -85,15 +95,9 @@ export class DashboardComponent implements OnInit {
   // -----------------------------------------------------------------------------------------------------
   drawRectable( tamano: number) { // RECIBE EL TAMAÑO DEL TABLERO: N X N //debería recibir el obj juego
 
-    // this.game.size = this.game.size;
-    // SERVICIO QUE SE INYECTA EN EL COMP DASHBOARD
-    // ESTE SE ENCARGA DE LLAMAR AL BACK END
-    // RECIBE EL PARÁMETRO game QUE ES DE TIPO game (game.model)
-    this._gaming.someFunction(this.game).subscribe(
-      result => { // CARGA EL JSON CON LOS DATOS QUE RESPONDE EL BACK END
-        this.game.matrix = result.matrix; // SE LO ASIGNO A LA VAR TIPO game (game.model)
-        // this.drawRectable(this.game.size); // AQUÍ SE DEBE CREAR LA MATRIZ CON ESTE PARAMETRO FALTA IMPLEMENTACION
-        // console.log(result);
+    this._gaming.newGame(this.game).subscribe(
+      result => {
+        this.game.matrix = result.matrix;
       },
       error => {
         console.log(<any>error);
@@ -115,12 +119,13 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  winCondition(cantidad: number) {
+ /*  winCondition(cantidad: number) {
     this.game.toWin = cantidad;
    console.log('Cantidad fichas de gane: ', cantidad);
   }
-
+ */
   // JUGADOR AUTOMATICO
+  /*
   jugaadorAutomatico(event) {
     this.random(); // GENERA UNA LISTA DE NUMEROS RANDOM CON EL LA CANTIDAD DE CASILLAS(TAM)
     let yA = this.game.size-1; // PARA COLOCAR LAS FICHAS EN LA FILA BASE DEL TABLERO
@@ -229,17 +234,17 @@ export class DashboardComponent implements OnInit {
   }
   this.numeros2 = numeros; //ALMACENA LA SECUENCIA DE NUMEROS EN UN ARREGLO GLOBAL
 }
-
- //VERFICAR GANE
-  verificarGane() { // falta condicionales
+*/
+ // VERFICAR GANE
+/*   verificarGane() { // falta condicionales
     this.verificarGaneHorizontal();
     this.verificarGaneVertical();
     this.verificarGaneDiagonalArriba();
     this.verificarGaneDiagonalAbajo();
 
   }
-
- // VERIFICA EL GANE EN HORIZONTAL
+ */
+ /* // VERIFICA EL GANE EN HORIZONTAL
   verificarGaneHorizontal() {
     //console.log(this.matrix)
     for (let i = 0; i < this.game.size; i++) { // RECORRE COLUMNAS
@@ -267,7 +272,7 @@ export class DashboardComponent implements OnInit {
   }
 
   // VERIFICA EL GANE EN VERTICAL
-  verificarGaneVertical(){ 
+  verificarGaneVertical(){
     for (let i = 0; i < this.game.size; i++) { // RECORRE COLUMNAS
       for (let e = 0; e < this.game.size; e++) { // RECORRE FILAS
         if ( (this.matrix[i][e] == 1) && (this.matrix[i-1][e] == 1) ) { // VERIFICA GANE JUGADOR 1 SOLO PARA 2 FICHAS JUNTAS
@@ -278,7 +283,7 @@ export class DashboardComponent implements OnInit {
             alert("Jugador 2 ha ganado");
             this.fichasJ1 = 0;
           }
-        } 
+        }
 
         if ( (this.matrix[i][e] == 2) && (this.matrix[i-1][e] == 2) ) { // VERIFICA GANE JUGADOR 2 SOLO PARA 2 FICHAS JUNTAS
           this.matrix[i][e] = 4; // CAMBIA DE 2 A 4 PARA CONTAR LAS FICHAS SOLO 1 VEZ
@@ -341,5 +346,5 @@ export class DashboardComponent implements OnInit {
         }
       }
     }
-  }
+  } */
 }

@@ -9,10 +9,6 @@ import { Game } from '../../models/game.model';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-/*   turno: number = 1 ; // 1:J1 - 2:J2 //
-  matrix: number[][] = new Array(); // -
-  fichasJ1: number = 1;
-  fichasJ2: number = 1; */
   game: Game;
 
   control = 0; // VARIABLE PARA COLOCAR UNA FICHA UNA FILA ANTERIOR SI LA ACTUAL ESTA LLENA
@@ -29,75 +25,72 @@ export class DashboardComponent implements OnInit {
   // FUNCIÓN QUE PINTA UN CUADRO CUANDO LEE UN CLICK EN EL CANVAS
   // -----------------------------------------------------------------------------------------------------
   drawSomething(event) {
+    // console.log('MATRIZ: ', this.game.matrix);
     const canvas: any = document.getElementById('stage');
     if (canvas.getContext) { // CHECKEA QUE EL CONTEXTO EXISTA
       const ctx = canvas.getContext('2d');
       const i = event.offsetX; // UBICA LA COORDENADA X
       const j = event.offsetY; // UBICA LA COORDENADA Y
-
       for (let x = 0; x <= this.game.size; x++) {
         for (let y = 0; y <= this.game.size; y++) {
           if ( (i >= x * 90 && i <= x * 90 + 90) && (j >= y * 90 && j <= y * 90 + 90) ) {
             this.game.coordX = x;
             this.game.coordY = y;
-            // console.log('COORDS F.E:\n', this.game.coordX, this.game.coordY);
-            this._gaming.playGame(this.game).subscribe(
-              result => { // CARGA EL JSON CON LOS DATOS QUE RESPONDE EL BACK END
-                this.game.matrix = result.matrix; // SE LO ASIGNO A LA VAR TIPO game (game.model)
-                this.game.coordX = result.coordX;
-                this.game.coordY = result.coordY;
-                this.game.jugada = result.jugada;
-                this.game.win = result.win;
-                this.game.turno = result.turno;
-              },
-              error => {
-                console.log(<any>error);
-              }
-
-            );
-            // console.log('COORDS B.E:\n', this.game.coordX, this.game.coordY);
+            break;
+          }
+        }
+      }
+      this._gaming.playGame(this.game).subscribe(
+        result => { // CARGA EL JSON CON LOS DATOS QUE RESPONDE EL BACK END
+          this.game.matrix = result.matrix; // SE LO ASIGNO A LA VAR TIPO game (game.model)
+          this.game.coordX = result.coordX;
+          this.game.coordY = result.coordY;
+          this.game.jugada = result.jugada;
+          this.game.win = result.win;
+          this.game.turno = result.turno;
+          console.log('MATRIZ: ', this.game.matrix);
           if (this.game.win === true) {
             if (this.game.turno === 1) {
               ctx.fillStyle = 'rgb(160, 140, 160)'; // DEFINE EL COLOR DE LA FIGUTA
-              ctx.fillRect(x * 90, y * 90, 90, 90);
+              ctx.fillRect(this.game.coordX * 90, this.game.coordY * 90, 90, 90);
               alert('JUGADOR 1 GANA');
             } else {
               ctx.fillStyle = 'rgb(100, 100, 100)'; // DEFINE EL COLOR DE LA FIGUTA
-              ctx.fillRect(x * 90, y * 90, 90, 90);
+              ctx.fillRect(this.game.coordX * 90, this.game.coordY * 90, 90, 90);
               alert('JUGADOR 2 GANA');
-
             }
           } else {
             if (this.game.jugada === false) {
               alert('JUGADA INVALIDA');
             } else {
               if (this.game.turno === 2) {
+                /* console.log('ESTADO MATRIZ: ', this.game.matrix, '\nTURNO: ', this.game.turno,
+                  '\nSE PUEDE JUGAR?: ', this.game.jugada); */
                 ctx.fillStyle = 'rgb(160, 140, 160)'; // DEFINE EL COLOR DE LA FIGUTA
-                ctx.fillRect(x * 90, y * 90, 90, 90);
-
+                ctx.fillRect(this.game.coordX * 90, this.game.coordY * 90, 90, 90);
               } else {
                 ctx.fillStyle = 'rgb(100, 100, 100)'; // DEFINE EL COLOR DE LA FIGUTA
-                ctx.fillRect(x * 90, y * 90, 90, 90);
-
+                ctx.fillRect(this.game.coordX * 90, this.game.coordY * 90, 90, 90);
               }
-
             }
-
-
           }
-          }
+
+        },
+        error => {
+          console.log(<any>error);
         }
-      }
+
+      );
     }
   }
   // -----------------------------------------------------------------------------------------------------
   // FUNCIÓN QUE SE ENCARGA DE CREAR EL TABLERO DE JUEGO
   // -----------------------------------------------------------------------------------------------------
   drawRectable( tamano: number) { // RECIBE EL TAMAÑO DEL TABLERO: N X N //debería recibir el obj juego
-
     this._gaming.newGame(this.game).subscribe(
       result => {
         this.game.matrix = result.matrix;
+
       },
       error => {
         console.log(<any>error);
@@ -117,7 +110,23 @@ export class DashboardComponent implements OnInit {
         }
       }
     }
-  }
+   }
+/*     const canvas: any = document.getElementById('stage');
+    canvas.width = this.game.size * 90;  // VARIABLES QUE ACTUALIZAN LOS VALORES DEL CANVAS DE ACUERDO AL TAMAÑO DEL TABLERO
+    canvas.height = this.game.size * 90;
+        // se debe cambiar este ciclo x un ngFor y con una variable cargada desde el backend
+    if (canvas.getContext) {
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height); // LIMPIA EL CANVAS
+      for ( let i = 0; i <= this.game.size; i++) { // CICLO QUE SE ENCARGA DE INSERTAR CADA FICHA
+        for (let j = 0; j <= this.game.size; j++) {
+            ctx.strokeRect(i * 90, j * 90, 90, 90); // ES UNA FICHA CON FORMATO: (x,y,width,height)
+        }
+      }
+    }
+  } */
+
+}
 
  /*  winCondition(cantidad: number) {
     this.game.toWin = cantidad;
@@ -347,4 +356,4 @@ export class DashboardComponent implements OnInit {
       }
     }
   } */
-}
+

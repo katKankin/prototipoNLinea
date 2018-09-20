@@ -56,6 +56,7 @@ app.post('/makePlay', function(req, res) {
     /* game.coordX = req.body.coordX;
     game.coordY = req.body.coordY; */
     game.tryPlay(req.body.coordX, req.body.coordY);
+
     res.status(200).json({
         ok: true,
         mensaje: 'OK PLAY GAME!!',

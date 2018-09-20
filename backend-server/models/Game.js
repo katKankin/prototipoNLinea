@@ -29,32 +29,36 @@ module.exports = class Game {
     tryPlay(x, y) {
         this.coordX = x;
         this.coordY = y;
-        if (this.turno === 1) { // FICHA JUGADOR 1
-            if ((y + 1 === this.size) && (this.matrix[y][x] === 0)) { // VERIFICA PARA COLOCAR LA FICHA EN LA ULTIMA FILA J1
-                this.matrix[y][x] = 1; // COLOCA FICHA 
+        // console.log('x: ', x, 'y: ', y);
+        if (this.turno == 1) { // FICHA JUGADOR 1
+            if ((y + 1 === this.size) && (this.matrix[y][x] === 0)) { // VERIFICA PARA COLOCAR LA FICHA EN LA ULTIMA FILA J2
+                this.matrix[y][x] = 1; // FICHA JUGADOR 2
                 this.turno = 2; // CAMBIO DE TURNO
                 this.jugada = true;
-                this.verificarGane();
+                // this.verificarGane();
             } else if (this.matrix[y + 1][x] !== 0) { // JUGAR SOBRE UNA FICHA
-                this.matrix[y][x] = 1; // FICHA JUGADOR 1
+                this.matrix[y][x] = 1; // FICHA JUGADOR 2
                 this.turno = 2; // CAMBIO DE TURNO
                 this.jugada = true;
-                this.verificarGane();
+                //this.verificarGane();
             } else {
+                this.turno = 1;
                 this.jugada = false;
             }
         } else if (this.turno === 2) { // JUGADOR 2
+
             if ((y + 1 === this.size) && (this.matrix[y][x] === 0)) { // VERIFICA PARA COLOCAR LA FICHA EN LA ULTIMA FILA J2
                 this.matrix[y][x] = 2; // FICHA JUGADOR 2
                 this.turno = 1; // CAMBIO DE TURNO
                 this.jugada = true;
-                this.verificarGane();
+                // this.verificarGane();
             } else if (this.matrix[y + 1][x] !== 0) { // JUGAR SOBRE UNA FICHA
                 this.matrix[y][x] = 2; // FICHA JUGADOR 2
                 this.turno = 1; // CAMBIO DE TURNO
                 this.jugada = true;
-                this.verificarGane();
+                //this.verificarGane();
             } else {
+                this.turno = 2;
                 this.jugada = false;
             }
         }

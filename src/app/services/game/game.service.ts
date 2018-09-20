@@ -33,10 +33,7 @@ export class GameService {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
     const url = URL_SERVICIOS + '/game/makePlay';
     console.log('GENERATING REQUEST...\n');
-    // ENVIO EL ENDPONT Y EL JSON, RETORNA UN "RESPONSE" CON LOS DATOS
-    // PROCESADOS EN EL BACK END (VER BACK END)
     return this.http.post(url, params, {headers: headers}); // enviando game retornando observador para manejar response
-    // conexión a servidor
-    // alert('someFunction()');
+
   }
 }

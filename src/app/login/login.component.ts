@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute} from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
@@ -29,26 +29,56 @@ export class LoginComponent implements OnInit {
     email : '',
     profilePicture: ''
   };
+  google = {
+    loggedIn : false,
+    name : '',
+    email : '',
+    profilePicture: ''
+  };
 
   constructor( public router: Router,
     private _firebaseAuth: AngularFireAuth,
-    private authService: AuthService,
-    private location: Location,
-    private _activatedRoute: ActivatedRoute,
-    private afauth: AngularFireAuth, ) { }
+    public authService: AuthService,
+    /* private location: Location,
+    private _activatedRoute: ActivatedRoute, */
+    private afauth: AngularFireAuth ) { }
 
   ngOnInit() {
     init_plugins();
+    this.drawRectable();
   }
-
+  drawRectable() { // RECIBE EL TAMAÑO DEL TABLERO: N X N //debería recibir el obj juego
+    const canvas: any = document.getElementById('stage');
+    canvas.width = 10 * 90;  // VARIABLES QUE ACTUALIZAN LOS VALORES DEL CANVAS DE ACUERDO AL TAMAÑO DEL TABLERO
+    canvas.height = 10 * 90;
+        // se debe cambiar este ciclo x un ngFor y con una variable cargada desde el backend
+    if (canvas.getContext) {
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height); // LIMPIA EL CANVAS
+      for ( let i = 0; i <= 10; i++) { // CICLO QUE SE ENCARGA DE INSERTAR CADA FICHA
+        for (let j = 0; j <= 10; j++) {
+          const randomR = Math.floor((Math.random() * 253) + 1);
+          const randomG = Math.floor((Math.random() * 253) + 1);
+          const randomB = Math.floor((Math.random() * 253) + 1);
+          const color = 'rgb(' + randomR + ',' + randomG + ',' + randomB + ')';
+          ctx.fillStyle = color;
+          ctx.strokeRect(i * 90, j * 90, 90, 90); // ES UNA FICHA CON FORMATO: (x,y,width,height)
+          ctx.fillRect(i * 90, j * 90, 90, 90);
+        }
+      }
+    }
+   }
+  // ingresar(name: string)
   ingresar() {
-    this.router.navigate([ '/dashboard']);
+    // this.router.navigate([ '/dashboard', name]);
+    this.router.navigate(['/menu']);
 
   }
 
   signInWithEmailFist() { // Si es registrar es signed up
     this.authService.registerUser(this.user.email, this.user.password)
     .then((res) => {
+      // ALERT QUE YA SE REGISTRÓ
       console.log(this.user.email);
       console.log(this.user.password);
     })
@@ -64,21 +94,37 @@ export class LoginComponent implements OnInit {
     .catch((err) => console.log('error: ' + err));
   }
 
-  signInWithFacebook() {
-    this.afauth.auth.signInWithPopup(new firebase.auth.FacebookAuthProvider())
-    .then(res => {
+  signInWithFacebook() { // PENDIENTE REVISAR.
+    // this.afauth.auth.signInWithPopup(new firebase.auth.FacebookAuthProvider())
+    this.authService.signInWithFacebook()
+    .then((res) => {
       console.log(res);
       this.ingresar();
-    }); } // antes estaba )} , puse un ; porque tiraba error
+    }); }
 
     signInWithGoogle() {
+      // this.afauth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
       this.authService.signInWithGoogle()
       .then((res) => {
-        console.log(res);
         this.ingresar();
-        // this.location.go(window.location.href='http://google.com')
+        console.log(res.user.displayName);
       })
       .catch((err) => console.log(err));
+    }
+    /* logOut() {
+      this.authService.logout();
+    } */
+
+    /// ???? ////
+    logoutwithgoogle() {
+      this.google.loggedIn = false;
+      this.afauth.auth.signOut();
+      console.log('Out Google');
+      this._firebaseAuth.auth.signOut(); // puse ;
+      /*
+      this._firebaseAuth.auth.signOut(); // puse ;
+      console.log('Out');
+      return this._firebaseAuth.auth.signOut(); */
     }
 
     logoutwithfb() {
@@ -87,8 +133,8 @@ export class LoginComponent implements OnInit {
       console.log('Out FB');
       this._firebaseAuth.auth.signOut(); // puse ;
 
-      this._firebaseAuth.auth.signOut(); // puse ;
+/*       this._firebaseAuth.auth.signOut(); // puse ;
       console.log('Out');
-      return this._firebaseAuth.auth.signOut();
+      return this._firebaseAuth.auth.signOut(); */
     }
 }

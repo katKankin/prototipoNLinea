@@ -32,14 +32,24 @@ export class AuthService {
   }
 
   signInWithGoogle() {
-    return this._firebaseAuth.auth.signInWithPopup(
+    return new Promise<any>((resolve, reject) => {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      this.afAuth.auth.signInWithPopup(provider)
+      .then(res => {
+        resolve(res);
+      }, err => {
+        console.log(err);
+        reject(err);
+      }); // puse ;
+    }); // puse ;
+    /* return this._firebaseAuth.auth.signInWithPopup(
       new firebase.auth.GoogleAuthProvider()
-    ); // puse ;
+    ); // puse ; */
   }
 
   signInWithFacebook() {
     return new Promise<any>((resolve, reject) => {
-      let provider = new firebase.auth.FacebookAuthProvider();
+      const provider = new firebase.auth.FacebookAuthProvider();
       this.afAuth.auth.signInWithPopup(provider)
       .then(res => {
         resolve(res);
@@ -57,11 +67,6 @@ export class AuthService {
       err => reject (err));
     });
   }
-
-  /*getAuth() {
-    return this.afAuth.authState.map(auth => auth);
-  }*/
-
   isLoggedIn() {
     if (this.userDetails == null ) {
       return false;
@@ -69,8 +74,7 @@ export class AuthService {
       return true;
     }
   }
-
-  logout() {
+  logout() { // ???
     this._firebaseAuth.auth.signOut()
     .then((res) => this.router.navigate(['/']));
     return this.afAuth.auth.signOut();

@@ -4,6 +4,7 @@ import { PagesComponent } from './pages.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProgressComponent } from './progress/progress.component';
 import { AccoutSettingsComponent } from './accout-settings/accout-settings.component';
+import { MenuComponent } from './menu/menu.component';
 
 
 
@@ -12,10 +13,11 @@ const pagesRoutes: Routes = [
         path: '',
         component: PagesComponent,
         children: [
-            { path: 'dashboard', component: DashboardComponent },
+            { path: 'menu', component: MenuComponent },
+            { path: 'dashboard', component: DashboardComponent},
             { path: 'progress', component: ProgressComponent },
             { path: 'account-settings', component: AccoutSettingsComponent},
-            { path: '', redirectTo: '/dashboard', pathMatch: 'full' }
+            { path: '', redirectTo: '/login', pathMatch: 'full' }
         ]
     }
 ];

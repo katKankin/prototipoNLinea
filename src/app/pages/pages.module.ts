@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ColorPickerModule } from 'ngx-color-picker';
 import { PAGES_ROUTES } from './pages.routes';
 
 import { SharedModule } from '../shared/shared.module';
@@ -16,6 +17,7 @@ import { Graficas1Component } from './graficas1/graficas1.component';
 import { IncrementadorComponent } from '../components/incrementador/incrementador.component';
 import { GraficoDonaComponent } from '../components/grafico-dona/grafico-dona.component';
 import { AccoutSettingsComponent } from './accout-settings/accout-settings.component';
+import { MenuComponent } from './menu/menu.component';
 
 
 
@@ -26,7 +28,8 @@ import { AccoutSettingsComponent } from './accout-settings/accout-settings.compo
         ProgressComponent,
         IncrementadorComponent,
         GraficoDonaComponent,
-        AccoutSettingsComponent
+        AccoutSettingsComponent,
+        MenuComponent
     ],
     exports: [
         DashboardComponent,
@@ -34,6 +37,7 @@ import { AccoutSettingsComponent } from './accout-settings/accout-settings.compo
     ],
     imports: [
         SharedModule,
+        ColorPickerModule,
         PAGES_ROUTES,
         FormsModule,
         ChartsModule // es del ng2 charts

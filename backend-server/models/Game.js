@@ -19,6 +19,7 @@ module.exports = class Game {
 
 
     createBoard() { // se puede usar a lo largo d toda la clase la var matrix
+        this.matrix = [];
         for (var i = 0; i < this.size; i++) {
             this.matrix[i] = new Array(this.size);
             for (var j = 0; j < this.size; j++) {
@@ -35,12 +36,12 @@ module.exports = class Game {
                 this.matrix[y][x] = 1; // FICHA JUGADOR 2
                 this.turno = 2; // CAMBIO DE TURNO
                 this.jugada = true;
-                // this.verificarGane();
+                this.verificarGane();
             } else if (this.matrix[y + 1][x] !== 0) { // JUGAR SOBRE UNA FICHA
                 this.matrix[y][x] = 1; // FICHA JUGADOR 2
                 this.turno = 2; // CAMBIO DE TURNO
                 this.jugada = true;
-                //this.verificarGane();
+                this.verificarGane();
             } else {
                 this.turno = 1;
                 this.jugada = false;
@@ -51,12 +52,12 @@ module.exports = class Game {
                 this.matrix[y][x] = 2; // FICHA JUGADOR 2
                 this.turno = 1; // CAMBIO DE TURNO
                 this.jugada = true;
-                // this.verificarGane();
+                this.verificarGane();
             } else if (this.matrix[y + 1][x] !== 0) { // JUGAR SOBRE UNA FICHA
                 this.matrix[y][x] = 2; // FICHA JUGADOR 2
                 this.turno = 1; // CAMBIO DE TURNO
                 this.jugada = true;
-                //this.verificarGane();
+                this.verificarGane();
             } else {
                 this.turno = 2;
                 this.jugada = false;
@@ -83,7 +84,12 @@ module.exports = class Game {
                         this.turno = 1; // se cambia porque en la llamada, el turno se cambia antes de verificar
                         this.win = true;
                         this.fichasJ1 = 0;
+                        this.fichasJ2 = 0;
+                        // cleanData();
                     }
+
+
+
                 }
                 if ((this.matrix[i][e] == 2) && (this.matrix[i][e + 1] == 2)) { // VERIFICA QUE HAYA MAS DE 1 FICHA JUNTA
                     this.fichasJ2++; // AUMENTA LA CANTIDAD DE FICHA DEL JUGADOR 2
@@ -93,8 +99,10 @@ module.exports = class Game {
                         // alert("Jugador 2 ha ganado");
                         this.turno = 2;
                         this.win = true;
-                        this.fichasJ1 = 0; // será .fichasJ2???
+                        this.fichasJ1 = 0;
+                        this.fichasJ2 = 0;
                     }
+
                 }
             }
         }
@@ -113,7 +121,9 @@ module.exports = class Game {
                         this.turno = 1; // se cambia porque en la llamada, el turno se cambia antes de verificar
                         this.win = true;
                         this.fichasJ1 = 0;
+                        this.fichasJ2 = 0;
                     }
+
                 }
 
                 if ((this.matrix[i][e] == 2) && (this.matrix[i - 1][e] == 2)) { // VERIFICA GANE JUGADOR 2 SOLO PARA 2 FICHAS JUNTAS
@@ -125,6 +135,7 @@ module.exports = class Game {
                         this.turno = 2; // se cambia porque en la llamada, el turno se cambia antes de verificar
                         this.win = true;
                         this.fichasJ1 = 0;
+                        this.fichasJ2 = 0;
                     }
                 }
             }
@@ -143,6 +154,7 @@ module.exports = class Game {
                         this.turno = 1; // se cambia porque en la llamada, el turno se cambia antes de verificar
                         this.win = true;
                         this.fichasJ1 = 0;
+                        this.fichasJ2 = 0;
                     }
                 }
 
@@ -154,6 +166,7 @@ module.exports = class Game {
                         this.turno = 2; // se cambia porque en la llamada, el turno se cambia antes de verificar
                         this.win = true;
                         this.fichasJ1 = 0;
+                        this.fichasJ2 = 0;
                     }
                 }
             }
@@ -172,6 +185,7 @@ module.exports = class Game {
                         this.turno = 1; // se cambia porque en la llamada, el turno se cambia antes de verificar
                         this.win = true;
                         this.fichasJ1 = 0;
+                        this.fichasJ2 = 0;
                     }
                 }
 
@@ -183,6 +197,7 @@ module.exports = class Game {
                         this.turno = 2; // se cambia porque en la llamada, el turno se cambia antes de verificar
                         this.win = true;
                         this.fichasJ1 = 0;
+                        this.fichasJ2 = 0;
                     }
                 }
             }

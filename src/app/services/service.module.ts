@@ -1,17 +1,16 @@
 import { SidebarComponent } from '../shared/sidebar/sidebar.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { HttpClientModule } from '@angular/common/http';
 
 
 import {
   SettingsService,
   SidebarService,
   SharedService,
-  GameService
+  GameService,
+  MenuService
 } from './service.index';
-import { HttpClientModule } from '@angular/common/http';
-
 @NgModule({
   imports: [
     CommonModule,
@@ -21,7 +20,8 @@ import { HttpClientModule } from '@angular/common/http';
     SettingsService,
     SidebarService,
     SharedService,
-    GameService
+    GameService,
+    MenuService
 
   ],
   declarations: []

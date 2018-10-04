@@ -15,8 +15,9 @@ app.use(cors());
 // usando modelo de juego
 // instancia del modelo 
 var Game = require('../models/Game');
+// var GameConfig = require('/models/GameConfig'); //tipodeJuego, colores, dimensiones, c/gane
 var game;
-
+// var gameConfig;
 // endpoints
 // BÁSICAMENTE DICE CUANDO SE HAGA UN .get A ESTA RUTA HAGA ESTO:
 app.get('/', function(req, res) {
@@ -49,6 +50,7 @@ app.post('/setGame', function(req, res) {
         mensaje: 'OK SET GAME!!',
         matrix: game.matrix,
         size: game.size
+            // colores: gameConfig.colores
     });
 });
 

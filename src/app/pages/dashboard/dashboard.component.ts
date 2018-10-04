@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef }
 import { ThrowStmt } from '../../../../node_modules/@angular/compiler';
 import { GameService } from '../../services/service.index';
 import { Game } from '../../models/game.model';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,19 +14,24 @@ export class DashboardComponent implements OnInit {
 
   control = 0; // VARIABLE PARA COLOCAR UNA FICHA UNA FILA ANTERIOR SI LA ACTUAL ESTA LLENA
   numeros2: number[] = new Array(); // ARREGLO QUE SE USA PARA ALACENAR LOS NUMEROS GENERADOS AL AZAR
+  // nameSpace: String;
 
-  constructor( public _gaming: GameService) { }
+  constructor( public _gaming: GameService) {
+    this.game = new Game([], 4, 4, 1, 1, 1, true, false, 0, 0);
+   }
   ngOnInit() {
-
-    this.game = new Game([], 4, 4, 1, 1, 1, true, false, 0, 0); // ignore esto
+    // cosas que pasen x defecto
+    /* console.log(this.route.snapshot.params['gamer']);
+    const name = this.route.snapshot.params['gamer']; */
+    // this.game = new Game([], 4, 4, 1, 1, 1, true, false, 0, 0);
+    this.drawRectable(4);
 
   }
 
   // -----------------------------------------------------------------------------------------------------
   // FUNCIÓN QUE PINTA UN CUADRO CUANDO LEE UN CLICK EN EL CANVAS
   // -----------------------------------------------------------------------------------------------------
-  drawSomething(event) {
-    // console.log('MATRIZ: ', this.game.matrix);
+  tryPlay(event) {
     const canvas: any = document.getElementById('stage');
     if (canvas.getContext) { // CHECKEA QUE EL CONTEXTO EXISTA
       const ctx = canvas.getContext('2d');
@@ -97,6 +103,7 @@ export class DashboardComponent implements OnInit {
       }
 
     );
+    console.log('MATRIX: ', this.game.matrix);
     const canvas: any = document.getElementById('stage');
     canvas.width = this.game.size * 90;  // VARIABLES QUE ACTUALIZAN LOS VALORES DEL CANVAS DE ACUERDO AL TAMAÑO DEL TABLERO
     canvas.height = this.game.size * 90;
@@ -111,20 +118,7 @@ export class DashboardComponent implements OnInit {
       }
     }
    }
-/*     const canvas: any = document.getElementById('stage');
-    canvas.width = this.game.size * 90;  // VARIABLES QUE ACTUALIZAN LOS VALORES DEL CANVAS DE ACUERDO AL TAMAÑO DEL TABLERO
-    canvas.height = this.game.size * 90;
-        // se debe cambiar este ciclo x un ngFor y con una variable cargada desde el backend
-    if (canvas.getContext) {
-      const ctx = canvas.getContext('2d');
-      ctx.clearRect(0, 0, canvas.width, canvas.height); // LIMPIA EL CANVAS
-      for ( let i = 0; i <= this.game.size; i++) { // CICLO QUE SE ENCARGA DE INSERTAR CADA FICHA
-        for (let j = 0; j <= this.game.size; j++) {
-            ctx.strokeRect(i * 90, j * 90, 90, 90); // ES UNA FICHA CON FORMATO: (x,y,width,height)
-        }
-      }
-    }
-  } */
+
 
 }
 

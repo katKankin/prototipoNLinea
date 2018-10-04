@@ -13,14 +13,16 @@
         <div class="card">
             <div class="card-body">
                 <app-incrementador (actualizaValor)="game.toWin = $event" nombre="Fichas de gane" [progreso]="game.toWin"></app-incrementador>
-                <!-- <button class="btn btn-dark" type="submit" (click)="winCondition(game.toWin)">FIJAR</button> -->
+
             </div>
         </div>
     </div>
 </div>
 
 <!-- GENERA EL CANVAS PARA LA CREACIÓN DEL TABLERO-->
+
 <div style="text-align:center">
-    <canvas #canvasRef center id="stage" width="1000" height="1000" (click)="drawSomething($event)"> 
+
+    <canvas #canvasRef center id="stage" width="1000" height="1000" (click)="tryPlay($event)"> 
     </canvas>
 </div>

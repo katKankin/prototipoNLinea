@@ -11,13 +11,13 @@ export class IncrementadorComponent implements OnInit {
  // se le pone a la par el nombre como lo quiero llamar aqui en el ts
   @ViewChild('txtProgress') txtProgress: ElementRef;
 
-  @Input('nombre') leyenda: string = 'Leyenda';
+  @Input('nombre') leyenda: string = 'Fichas de gane';
   @Input() progreso: number = 4;
 
   @Output('actualizaValor') cambioValor: EventEmitter<number> = new EventEmitter();
 
   constructor() {
-    console.log('leyenda', this.leyenda);
+    // console.log('leyenda', this.leyenda);
     // console.log('progreso', this.progreso);
 
   }

@@ -1,4 +1,11 @@
 <div class="row">
+    <div class="card">
+        <div class="card-body">
+            <h3>{{name}}</h3>
+        </div>
+    </div>
+</div>
+<div class="row">
     <div class="col-6">
         <div class="card">
             <div class="card-body">
@@ -15,14 +22,15 @@
             <div class="card-body">
                 <h4 class="card-title">Game Mode</h4>
                 <div class="btn-group" role="group" aria-label="Basic example">
-                    <button class="btn btn-secondary" type="submit">1 VS 1</button>
-                    <button class="btn btn-secondary" type="submit">1 VS COMPUTER</button>
+                    <button class="btn btn-secondary" type="submit" (click)="game.gameMode = 1">1 VS 1</button>
+                    <button class="btn btn-secondary" type="submit" (click)="game.gameMode = 1">1 VS COMPUTER</button>
 
                 </div>
 
             </div>
             <br>
-            <button class="btn btn-dark" type="submit">NEW GAME</button>
+            <!-- ESTE BOTÓN DEBE ENCARGARSE DE VALIDAR QUE LOS CAMPOS ESTEN COMPLETOS -->
+            <button class="btn btn-dark" type="submit" (click)="setGame()">NEW GAME</button>
             <!-- (click)="drawRectable(game.size)" -->
         </div>
     </div>

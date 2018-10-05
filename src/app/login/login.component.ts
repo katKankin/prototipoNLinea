@@ -4,6 +4,8 @@ import { AuthService } from '../services/auth.service';
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
 import { Location } from '@angular/common';
+import { MenuService } from '../services/menu/menu.service';
+import { UserData } from '../models/userdata.model';
 
 // se declara porq el init-plugins no es reconocido y existe:
 declare function init_plugins();
@@ -17,7 +19,7 @@ declare function init_plugins();
 export class LoginComponent implements OnInit {
 
   static location: Location;
-
+  userData: UserData;
   user = {
     email: '',
     password: ''
@@ -39,9 +41,10 @@ export class LoginComponent implements OnInit {
   constructor( public router: Router,
     private _firebaseAuth: AngularFireAuth,
     public authService: AuthService,
+    private _settingsService: MenuService,
     /* private location: Location,
     private _activatedRoute: ActivatedRoute, */
-    private afauth: AngularFireAuth ) { }
+    private afauth: AngularFireAuth ) { this.userData = new UserData('XXX'); }
 
   ngOnInit() {
     init_plugins();
@@ -102,20 +105,28 @@ export class LoginComponent implements OnInit {
       this.ingresar();
     }); }
 
-    signInWithGoogle() {
+  signInWithGoogle() {
+    console.log(this.userData.userName);
       // this.afauth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
-      this.authService.signInWithGoogle()
-      .then((res) => {
-        this.ingresar();
-        console.log(res.user.displayName);
-      })
-      .catch((err) => console.log(err));
-    }
-    /* logOut() {
-      this.authService.logout();
-    } */
+    this.authService.signInWithGoogle()
+    .then((res) => {
+      // aquí debería cargar los datos al backend
+      this.userData.userName = res.user.displayName;
+      this._settingsService.setData(this.userData).subscribe(
+        result => { // llamar no a un service si no hacer la petición directamente 
+          this.userData.userName = result.userName;
+          // console.log('NOMBRE RECIBIDO: ', this.userData.userName);
+        },
+        error => {
+          console.log(<any>error);
+        }
+      );
+      this.ingresar();
+      // console.log(res.user.displayName);
+    })
+    .catch((err) => console.log(err));
+  }
 
-    /// ???? ////
     logoutwithgoogle() {
       this.google.loggedIn = false;
       this.afauth.auth.signOut();

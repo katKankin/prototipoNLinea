@@ -27,8 +27,8 @@ import { MenuComponent } from './menu/menu.component';
         DashboardComponent,
         ProgressComponent,
         IncrementadorComponent,
-        GraficoDonaComponent,
-        AccoutSettingsComponent,
+        GraficoDonaComponent, // DELETE
+        AccoutSettingsComponent, // DELETE
         MenuComponent
     ],
     exports: [

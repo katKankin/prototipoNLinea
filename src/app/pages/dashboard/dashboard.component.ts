@@ -17,14 +17,11 @@ export class DashboardComponent implements OnInit {
   // nameSpace: String;
 
   constructor( public _gaming: GameService) {
-    this.game = new Game([], 4, 4, 1, 1, 1, true, false, 0, 0);
+
    }
   ngOnInit() {
-    // cosas que pasen x defecto
-    /* console.log(this.route.snapshot.params['gamer']);
-    const name = this.route.snapshot.params['gamer']; */
-    // this.game = new Game([], 4, 4, 1, 1, 1, true, false, 0, 0);
-    this.drawRectable(4);
+    // CONSULTAR SERVICE PARA CARGAR JUEGO
+    this.drawRectable();
 
   }
 
@@ -40,7 +37,7 @@ export class DashboardComponent implements OnInit {
       for (let x = 0; x <= this.game.size; x++) {
         for (let y = 0; y <= this.game.size; y++) {
           if ( (i >= x * 90 && i <= x * 90 + 90) && (j >= y * 90 && j <= y * 90 + 90) ) {
-            this.game.coordX = x;
+            this.game.coordX = x; // se setean las coordenadas (x, y) del click
             this.game.coordY = y;
             break;
           }
@@ -54,14 +51,16 @@ export class DashboardComponent implements OnInit {
           this.game.jugada = result.jugada;
           this.game.win = result.win;
           this.game.turno = result.turno;
+          this.game.colorJ1 = result.colorJ1;
+          this.game.colorJ2 = result.colorJ2;
           console.log('MATRIZ: ', this.game.matrix);
           if (this.game.win === true) {
             if (this.game.turno === 1) {
-              ctx.fillStyle = 'rgb(160, 140, 160)'; // DEFINE EL COLOR DE LA FIGUTA
+              ctx.fillStyle =  this.game.colorJ1; // 'rgb(160, 140, 160)'; // DEFINE EL COLOR DE LA FIGUTA
               ctx.fillRect(this.game.coordX * 90, this.game.coordY * 90, 90, 90);
               alert('JUGADOR 1 GANA');
             } else {
-              ctx.fillStyle = 'rgb(100, 100, 100)'; // DEFINE EL COLOR DE LA FIGUTA
+              ctx.fillStyle = this.game.colorJ2; // 'rgb(100, 100, 100)'; // DEFINE EL COLOR DE LA FIGUTA
               ctx.fillRect(this.game.coordX * 90, this.game.coordY * 90, 90, 90);
               alert('JUGADOR 2 GANA');
             }
@@ -72,10 +71,10 @@ export class DashboardComponent implements OnInit {
               if (this.game.turno === 2) {
                 /* console.log('ESTADO MATRIZ: ', this.game.matrix, '\nTURNO: ', this.game.turno,
                   '\nSE PUEDE JUGAR?: ', this.game.jugada); */
-                ctx.fillStyle = 'rgb(160, 140, 160)'; // DEFINE EL COLOR DE LA FIGUTA
+                ctx.fillStyle = this.game.colorJ2; // DEFINE EL COLOR DE LA FIGUTA
                 ctx.fillRect(this.game.coordX * 90, this.game.coordY * 90, 90, 90);
               } else {
-                ctx.fillStyle = 'rgb(100, 100, 100)'; // DEFINE EL COLOR DE LA FIGUTA
+                ctx.fillStyle = this.game.colorJ1; // DEFINE EL COLOR DE LA FIGUTA
                 ctx.fillRect(this.game.coordX * 90, this.game.coordY * 90, 90, 90);
               }
             }
@@ -92,31 +91,40 @@ export class DashboardComponent implements OnInit {
   // -----------------------------------------------------------------------------------------------------
   // FUNCIÓN QUE SE ENCARGA DE CREAR EL TABLERO DE JUEGO
   // -----------------------------------------------------------------------------------------------------
-  drawRectable( tamano: number) { // RECIBE EL TAMAÑO DEL TABLERO: N X N //debería recibir el obj juego
-    this._gaming.newGame(this.game).subscribe(
+  drawRectable() { // RECIBE EL TAMAÑO DEL TABLERO: N X N //debería recibir el obj juego
+    this._gaming.retrieveGame().subscribe(
       result => {
-        this.game.matrix = result.matrix;
-
+        this.game = new Game(
+          result.matrix,
+          result.size,
+          result.toWin, 1, 1, 1, true, false, 0, 0,
+          result.colorJ1,
+          result.colorJ2,
+          result.gameMode);
+          console.log('MATRIX: ', this.game.matrix);
+          console.log('COLOR J1: ', this.game.colorJ1);
+          const canvas: any = document.getElementById('stage');
+          canvas.width = this.game.size * 90;  // VARIABLES QUE ACTUALIZAN LOS VALORES DEL CANVAS DE ACUERDO AL TAMAÑO DEL TABLERO
+          canvas.height = this.game.size * 90;
+              // se debe cambiar este ciclo x un ngFor y con una variable cargada desde el backend
+          if (canvas.getContext) {
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // LIMPIA EL CANVAS
+            for ( let i = 0; i <= this.game.size; i++) { // CICLO QUE SE ENCARGA DE INSERTAR CADA FICHA
+              for (let j = 0; j <= this.game.size; j++) {
+                  ctx.strokeRect(i * 90, j * 90, 90, 90); // ES UNA FICHA CON FORMATO: (x,y,width,height)
+              }
+            }
+          }
+        /* this.game.matrix = result.matrix;
+        this.game.colorJ1 = result.colorJ1;
+        this.game.colorJ2 = result.colorJ2;
+        this.game.gameMode = result.gameMode; */
       },
       error => {
         console.log(<any>error);
       }
-
     );
-    console.log('MATRIX: ', this.game.matrix);
-    const canvas: any = document.getElementById('stage');
-    canvas.width = this.game.size * 90;  // VARIABLES QUE ACTUALIZAN LOS VALORES DEL CANVAS DE ACUERDO AL TAMAÑO DEL TABLERO
-    canvas.height = this.game.size * 90;
-        // se debe cambiar este ciclo x un ngFor y con una variable cargada desde el backend
-    if (canvas.getContext) {
-      const ctx = canvas.getContext('2d');
-      ctx.clearRect(0, 0, canvas.width, canvas.height); // LIMPIA EL CANVAS
-      for ( let i = 0; i <= this.game.size; i++) { // CICLO QUE SE ENCARGA DE INSERTAR CADA FICHA
-        for (let j = 0; j <= this.game.size; j++) {
-            ctx.strokeRect(i * 90, j * 90, 90, 90); // ES UNA FICHA CON FORMATO: (x,y,width,height)
-        }
-      }
-    }
    }
 
 

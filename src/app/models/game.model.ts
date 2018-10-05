@@ -11,7 +11,11 @@ export class Game {
         public jugada: boolean,
         public win: boolean,
         public coordX: number= 0,
-        public coordY: number= 0
+        public coordY: number= 0,
+        // CONFIG:
+        public colorJ1: string = 'rgb(255,0,0)',
+        public colorJ2: string = 'rgb(255,0,0)',
+        public gameMode: number = 1 // 1: 1 vs 1, 2: 1 vs IA
 
 
     ) { }

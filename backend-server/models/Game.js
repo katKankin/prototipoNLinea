@@ -1,9 +1,5 @@
 // clase
 module.exports = class Game {
-    // COMO UNA CLASE NORMAL, AQUÍ ESTÁ MI MODELO COMO EN EL FRONT END, QUE TIENE MI MATRIZ
-    // EN ESTE MODELO ES DONDE SE CARGARÁN LOS DATOS DEL REQUEST DE MI FRONT END
-    // ES UNA CLASE NORMAL CON METODOS NADA MÁS ES EL MODELO
-    // LOGICA DE JUEGO
     constructor(size, toWin) {
         this.matrix = [];
         this.size = size;
@@ -15,9 +11,24 @@ module.exports = class Game {
         this.win = false;
         this.coordX = 0;
         this.coordY = 0;
+        this.userData = '';
+        // CONFIG
+        this.colorJ1 = '';
+        this.colorJ2 = '';
+        this.gameMode = 0;
     }
 
-
+    setConfig(colorJ1, colorJ2, gameMode) {
+            this.colorJ1 = colorJ1;
+            this.colorJ2 = colorJ2;
+            this.gameMode = gameMode;
+        }
+        /* setUserData(userName) {
+            this.userData = userName;
+        }
+        getUserData() {
+            return this.userData;
+        } */
     createBoard() { // se puede usar a lo largo d toda la clase la var matrix
         this.matrix = [];
         for (var i = 0; i < this.size; i++) {

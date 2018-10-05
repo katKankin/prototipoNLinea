@@ -6,6 +6,8 @@ import * as firebase from 'firebase/app';
 import { Location } from '@angular/common';
 import { AngularFireDatabaseModule, AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 
+import { MenuService } from '../services/menu/menu.service';
+import { UserData } from '../models/userdata.model';
 
 // se declara porq el init-plugins no es reconocido y existe:
 declare function init_plugins();
@@ -19,7 +21,7 @@ declare function init_plugins();
 export class LoginComponent implements OnInit {
 
   static location: Location;
-
+  userData: UserData;
   user = {
     email: '',
     password: ''
@@ -42,12 +44,10 @@ export class LoginComponent implements OnInit {
     private _firebaseAuth: AngularFireAuth,
     public authService: AuthService,
     private db: AngularFireDatabase, // REFERENCIA A LA REALTIMEDATABASE
+    private _settingsService: MenuService,
     /* private location: Location,
     private _activatedRoute: ActivatedRoute, */
-    private afauth: AngularFireAuth ) { }
-
-   // todosUser$: AngularFireList<any[]>; // AYUDA PARA ENCONTRAR A UN USUARIO CUANDO INICIA SESIÓN
-
+    private afauth: AngularFireAuth ) { this.userData = new UserData('XXX'); }
   ngOnInit() {
     init_plugins();
     this.drawRectable();
@@ -77,7 +77,6 @@ export class LoginComponent implements OnInit {
   // ingresar(name: string)
   ingresar() {
     // this.router.navigate([ '/dashboard', name]);
-    // this.showUser(); // MUESTRA LOS USUARIOS DE LA BD ANTES DE IR A MENÚ, ESTÁ AQUÍ PARA PRUEBAS
     this.router.navigate(['/menu']);
   }
 
@@ -109,21 +108,28 @@ export class LoginComponent implements OnInit {
       this.ingresar();
     }); }
 
-    signInWithGoogle() {
+  signInWithGoogle() {
+    console.log(this.userData.userName);
       // this.afauth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
-      this.authService.signInWithGoogle()
-      .then((res) => {
-      //  this.addUser(res.user.displayName); // SE GUARDA EL USUARIO EN LA BD
-        this.ingresar();
-       // console.log(res.user.displayName);
-      })
-      .catch((err) => console.log(err));
-    }
-    /* logOut() {
-      this.authService.logout();
-    } */
+    this.authService.signInWithGoogle()
+    .then((res) => {
+      // aquí debería cargar los datos al backend
+      this.userData.userName = res.user.displayName;
+      this._settingsService.setData(this.userData).subscribe(
+        result => { // llamar no a un service si no hacer la petición directamente
+          this.userData.userName = result.userName;
+          // console.log('NOMBRE RECIBIDO: ', this.userData.userName);
+        },
+        error => {
+          console.log(<any>error);
+        }
+      );
+      this.ingresar();
+      // console.log(res.user.displayName);
+    })
+    .catch((err) => console.log(err));
+  }
 
-    /// ???? ////
     logoutwithgoogle() {
       this.google.loggedIn = false;
       this.afauth.auth.signOut();

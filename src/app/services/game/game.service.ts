@@ -20,6 +20,13 @@ export class GameService {
     console.log('GENERATING REQUEST...\n');
     return this.http.post(url, params, {headers: headers});
   }
+  retrieveGame(): Observable<any> {
+    // const params = JSON.stringify(game);
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    const url = URL_SERVICIOS + '/game/getgame';
+    console.log('GENERATING REQUEST...\n');
+    return this.http.get(url, {headers: headers});
+  }
   playGame(game: Game): Observable<any> {
     const params = JSON.stringify(game);
     const headers = new HttpHeaders().set('Content-Type', 'application/json');

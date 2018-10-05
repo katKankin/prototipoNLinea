@@ -4,6 +4,8 @@ import { AuthService } from '../services/auth.service';
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
 import { Location } from '@angular/common';
+import { AngularFireDatabaseModule, AngularFireDatabase, AngularFireList } from 'angularfire2/database';
+
 
 // se declara porq el init-plugins no es reconocido y existe:
 declare function init_plugins();
@@ -39,14 +41,18 @@ export class LoginComponent implements OnInit {
   constructor( public router: Router,
     private _firebaseAuth: AngularFireAuth,
     public authService: AuthService,
+    private db: AngularFireDatabase, // REFERENCIA A LA REALTIMEDATABASE
     /* private location: Location,
     private _activatedRoute: ActivatedRoute, */
     private afauth: AngularFireAuth ) { }
+
+   // todosUser$: AngularFireList<any[]>; // AYUDA PARA ENCONTRAR A UN USUARIO CUANDO INICIA SESIÓN
 
   ngOnInit() {
     init_plugins();
     this.drawRectable();
   }
+
   drawRectable() { // RECIBE EL TAMAÑO DEL TABLERO: N X N //debería recibir el obj juego
     const canvas: any = document.getElementById('stage');
     canvas.width = 10 * 90;  // VARIABLES QUE ACTUALIZAN LOS VALORES DEL CANVAS DE ACUERDO AL TAMAÑO DEL TABLERO
@@ -71,8 +77,8 @@ export class LoginComponent implements OnInit {
   // ingresar(name: string)
   ingresar() {
     // this.router.navigate([ '/dashboard', name]);
+    // this.showUser(); // MUESTRA LOS USUARIOS DE LA BD ANTES DE IR A MENÚ, ESTÁ AQUÍ PARA PRUEBAS
     this.router.navigate(['/menu']);
-
   }
 
   signInWithEmailFist() { // Si es registrar es signed up
@@ -99,6 +105,7 @@ export class LoginComponent implements OnInit {
     this.authService.signInWithFacebook()
     .then((res) => {
       console.log(res);
+      // this.addUser(res.user.displayName); // SE GUARDA EL USUARIO EN LA BD
       this.ingresar();
     }); }
 
@@ -106,8 +113,9 @@ export class LoginComponent implements OnInit {
       // this.afauth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
       this.authService.signInWithGoogle()
       .then((res) => {
+      //  this.addUser(res.user.displayName); // SE GUARDA EL USUARIO EN LA BD
         this.ingresar();
-        console.log(res.user.displayName);
+       // console.log(res.user.displayName);
       })
       .catch((err) => console.log(err));
     }
@@ -132,7 +140,6 @@ export class LoginComponent implements OnInit {
       this.afauth.auth.signOut();
       console.log('Out FB');
       this._firebaseAuth.auth.signOut(); // puse ;
-
 /*       this._firebaseAuth.auth.signOut(); // puse ;
       console.log('Out');
       return this._firebaseAuth.auth.signOut(); */

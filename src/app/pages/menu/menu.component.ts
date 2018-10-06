@@ -22,7 +22,7 @@ export class MenuComponent implements OnInit {
     // console.log(params);
     this.game = new Game([], 4, 4, 1, 1, 1, true, false, 0, 0);
     this._settingsService.retrieveData().subscribe(
-      result => { // llamar no a un service si no hacer la petición directamente 
+      result => { // llamar no a un service si no hacer la petición directamente
 
         this.name = 'Welcome ' + result.name; // verificar el dato de otra manera
       },
@@ -103,6 +103,6 @@ export class MenuComponent implements OnInit {
       }
     } */
     // console.log(stringify(this.game));
-    
+
    }
 }

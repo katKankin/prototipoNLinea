@@ -4,6 +4,8 @@ import { AuthService } from '../services/auth.service';
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
 import { Location } from '@angular/common';
+import { AngularFireDatabaseModule, AngularFireDatabase, AngularFireList } from 'angularfire2/database';
+
 import { MenuService } from '../services/menu/menu.service';
 import { UserData } from '../models/userdata.model';
 
@@ -41,15 +43,16 @@ export class LoginComponent implements OnInit {
   constructor( public router: Router,
     private _firebaseAuth: AngularFireAuth,
     public authService: AuthService,
+    private db: AngularFireDatabase, // REFERENCIA A LA REALTIMEDATABASE
     private _settingsService: MenuService,
     /* private location: Location,
     private _activatedRoute: ActivatedRoute, */
     private afauth: AngularFireAuth ) { this.userData = new UserData('XXX'); }
-
   ngOnInit() {
     init_plugins();
     this.drawRectable();
   }
+
   drawRectable() { // RECIBE EL TAMAÑO DEL TABLERO: N X N //debería recibir el obj juego
     const canvas: any = document.getElementById('stage');
     canvas.width = 10 * 90;  // VARIABLES QUE ACTUALIZAN LOS VALORES DEL CANVAS DE ACUERDO AL TAMAÑO DEL TABLERO
@@ -75,7 +78,6 @@ export class LoginComponent implements OnInit {
   ingresar() {
     // this.router.navigate([ '/dashboard', name]);
     this.router.navigate(['/menu']);
-
   }
 
   signInWithEmailFist() { // Si es registrar es signed up
@@ -110,6 +112,7 @@ export class LoginComponent implements OnInit {
     // this.afauth.auth.signInWithPopup(new firebase.auth.FacebookAuthProvider())
     this.authService.signInWithFacebook()
     .then((res) => {
+<<<<<<< HEAD
       this.userData.userName = res.user.displayName;
       this._settingsService.setData(this.userData).subscribe(
         result => { // llamar no a un service si no hacer la petición directamente 
@@ -120,6 +123,10 @@ export class LoginComponent implements OnInit {
           console.log(<any>error);
         }
       );
+=======
+      console.log(res);
+      // this.addUser(res.user.displayName); // SE GUARDA EL USUARIO EN LA BD
+>>>>>>> a7d9f82388c743d9f562d7ac208f3a26fdfad3c6
       this.ingresar();
     })
     .catch((err) => console.log('error: ' + err)); }
@@ -132,7 +139,7 @@ export class LoginComponent implements OnInit {
       // aquí debería cargar los datos al backend
       this.userData.userName = res.user.displayName;
       this._settingsService.setData(this.userData).subscribe(
-        result => { // llamar no a un service si no hacer la petición directamente 
+        result => { // llamar no a un service si no hacer la petición directamente
           this.userData.userName = result.userName;
           // console.log('NOMBRE RECIBIDO: ', this.userData.userName);
         },
@@ -162,7 +169,6 @@ export class LoginComponent implements OnInit {
       this.afauth.auth.signOut();
       console.log('Out FB');
       this._firebaseAuth.auth.signOut(); // puse ;
-
 /*       this._firebaseAuth.auth.signOut(); // puse ;
       console.log('Out');
       return this._firebaseAuth.auth.signOut(); */

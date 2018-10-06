@@ -83,12 +83,12 @@ module.exports = class Game {
     }
 
     
-     // VERIFICA EL GANE EN HORIZONTAL JUGADOR 1
-     verificarGaneHorizontalJ1(){
+    // VERIFICA EL GANE EN HORIZONTAL JUGADOR 1
+    verificarGaneHorizontalJ1(){
         for (var x = 0; x <= this.size-1;  x++) {
             for (var y = 0; y <= this.size-1;  y++) {
                 if(this.matrix[x][y] === 1){
-                    for(var f= 0; f<=this.size-1; f++ ){
+                    for(var f= 0; f <= this.size-1; f++ ){
                         if(this.matrix[x][f] === 1){
                             this.fichasJ1++;
                             if(this.fichasJ1 >= this.toWin){
@@ -99,7 +99,7 @@ module.exports = class Game {
                             }
                         }
                         else{
-                            this.fichasJ1=0;
+                            this.fichasJ1 = 0;
                         }
                     } 
                 }
@@ -115,7 +115,7 @@ module.exports = class Game {
         for (var x = 0; x <= this.size-1;  x++) {
             for (var y = 0; y <= this.size-1;  y++) {
                 if(this.matrix[x][y] === 2){
-                    for(var f= 0; f<=this.size-1; f++ ){
+                    for(var f= 0; f <= this.size-1; f++ ){
                         if(this.matrix[x][f] === 2){
                             this.fichasJ2++;
                             if(this.fichasJ2 >= this.toWin){
@@ -126,12 +126,12 @@ module.exports = class Game {
                             }
                         }
                         else{
-                            this.fichasJ2=0;
+                            this.fichasJ2 = 0;
                         }
                     }  
                 }
                 else{
-                    this.fichasJ2=0;
+                    this.fichasJ2 = 0;
                 }
             }
         }
@@ -142,7 +142,7 @@ module.exports = class Game {
         for (var x = 0; x <= this.size-1;  x++) {
             for (var y = 0; y <= this.size-1;  y++) {
                 if(this.matrix[x][y] === 1){
-                    for(var f= 0; f<=this.size-1; f++ ){
+                    for(var f= 0; f <= this.size-1; f++ ){
                         if(this.matrix[f][y] === 1){
                             this.fichasJ1++;
                             if(this.fichasJ1 >= this.toWin){
@@ -153,12 +153,12 @@ module.exports = class Game {
                             }
                         }
                         else{
-                            this.fichasJ1=0;
+                            this.fichasJ1 = 0;
                         }
                     }  
                 }
                 else{
-                    this.fichasJ1=0;
+                    this.fichasJ1 = 0;
                 }
             }
         }
@@ -169,10 +169,9 @@ module.exports = class Game {
         for (var x = 0; x <= this.size-1;  x++) {
             for (var y = 0; y <= this.size-1;  y++) {
                 if(this.matrix[x][y] === 2){
-                    for(var f= 0; f<=this.size-1; f++ ){
+                    for(var f= 0; f <= this.size-1; f++ ){
                         if(this.matrix[f][y] === 2){
                             this.fichasJ2++;
-                            console.log(this.fichasJ2);
                             if(this.fichasJ2 === this.toWin){
                                 this.fichasJ1 = 0;
                                 this.fichasJ2 = 0;
@@ -181,33 +180,36 @@ module.exports = class Game {
                             }
                         }
                         else{
-                            this.fichasJ2=0;
+                            this.fichasJ2 = 0;
                         }
                     }  
                 }
                 else{
-                    this.fichasJ2=0;
+                    this.fichasJ2 = 0;
                 }
             }
         }
     }
 
-    // VERIFICA EL GANE EN DIAGONAL, ARRIBA JUGADOR 1 /
+    // VERIFICA EL GANE EN DIAGONAL, DE ARRIBA A ARRIBA JUGADOR 1 /
     verificarGaneDiagonalArribaJ1() {
-        this.fichasJ1=0;
-        for (var x = this.size-1; x >= 0 ;x--) {
+        for (var x = 0; x <= this.size-1; x++) {
             for (var y = 0; y<= this.size-1 ;y++) {
                 if(this.matrix[x][y] === 1){
                     var f = x;
+                    this.fichasJ1=0;
                     for( var c = y; c < this.size; c++){
                         if(this.matrix[f][c] === 1){
-                            f--;
                             this.fichasJ1++;
-                            if(this.fichasJ1 >= this.toWin){
+                            if(this.fichasJ1 === this.toWin){
                                 this.fichasJ1 = 0;
                                 this.fichasJ2 = 0;
                                 this.turno = 1; // se cambia porque en la llamada, el turno se cambia antes de verificar
                                 this.win = true;
+                                break;
+                            }
+                            f--;
+                            if (f === -1) {
                                 break;
                             }
                         } else { 
@@ -229,24 +231,27 @@ module.exports = class Game {
                 break;
             }
         }
-        //console.log("-");
     }
 
-    // VERIFICA EL GANE EN DIAGONAL, ARRIBA JUGADOR 2 /
+    // VERIFICA EL GANE EN DIAGONAL, DE ARRIBA A ARRIBA JUGADOR 2 /
     verificarGaneDiagonalArribaJ2() {
         for (var x = this.size-1; x >= 0 ;x--) {
             for (var y = 0; y<= this.size-1 ;y++) {
                 if(this.matrix[x][y] === 2){
                     var f = x;
+                    this.fichasJ2 = 0;
                     for( var c = y; c < this.size; c++){
                         if(this.matrix[f][c] === 2){
-                            f--;
                             this.fichasJ2++;
                             if(this.fichasJ2 === this.toWin){
                                 this.fichasJ1 = 0;
                                 this.fichasJ2 = 0;
                                 this.turno = 2; // se cambia porque en la llamada, el turno se cambia antes de verificar
                                 this.win = true;
+                                break;
+                            }
+                            f--;
+                            if (f === -1) {
                                 break;
                             }
                         } else { 
@@ -265,20 +270,16 @@ module.exports = class Game {
             }
         }
     }
-
-    // VERIFICA EL GANE EN DIAGONAL, ABAJO JUGADOR 1 \
+    
+    // VERIFICA EL GANE EN DIAGONAL, DE ABAJO A ARRIBA JUGADOR 1 \
     verificarGaneDiagonalAbajoJ1() {
-        console.log("DAbajo1")
         for (var x = 0; x <= this.size-1; x++) {
             for (var y = 0; y<= this.size-1 ;y++) {
                 if(this.matrix[x][y] === 1){
-                    //console.log("x",x,"y",y);
                     var f = x;
-                    //console.log("f",f)
+                    this.fichasJ1=0;
                     for( var c = y; c >= 0; c--){
-                        //console.log("f",f,"c",c);
                         if(this.matrix[f][c] === 1){
-                           f--;
                             this.fichasJ1++;
                             if(this.fichasJ1 === this.toWin){
                                 this.fichasJ1 = 0;
@@ -287,12 +288,15 @@ module.exports = class Game {
                                 this.win = true;
                                 break;
                             }
+                            f--;
+                            if( (f === -1) ){
+                                break;
+                            }
                         } else { 
                             this.fichasJ1=0;
                             break;
                         }
                     }
-                    //break;
                 }
                 if(this.fichasJ1 === this.toWin){
                     break;
@@ -303,25 +307,27 @@ module.exports = class Game {
                 break;
             }
         }
-        console.log("-");
     }
 
-    // VERIFICA EL GANE EN DIAGONAL, ABAJO JUGADOR 2 \
+    // VERIFICA EL GANE EN DIAGONAL, DE ABAJO A ARRIBA JUGADOR 2 \
     verificarGaneDiagonalAbajoJ2() {
-        //this.fichasJ1DR=0;
         for (var x = 0; x <= this.size-1; x++) {
             for (var y = 0; y<= this.size-1 ;y++) {
                 if(this.matrix[x][y] === 2){
                     var f = x;
+                    this.fichasJ2 = 0;
                     for( var c = y; c >= 0; c--){
                         if(this.matrix[f][c] === 2){
-                           f--;
                             this.fichasJ2++;
                             if(this.fichasJ2 === this.toWin){
                                 this.fichasJ1 = 0;
                                 this.fichasJ2 = 0;
                                 this.turno = 2; // se cambia porque en la llamada, el turno se cambia antes de verificar
                                 this.win = true;
+                                break;
+                            }
+                            f--;
+                            if (f === -1) {
                                 break;
                             }
                         } else { 
@@ -338,7 +344,6 @@ module.exports = class Game {
                 break;
             }
         }
-        //console.log("-");
     }
 };
 

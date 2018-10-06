@@ -116,10 +116,6 @@ export class DashboardComponent implements OnInit {
               }
             }
           }
-        /* this.game.matrix = result.matrix;
-        this.game.colorJ1 = result.colorJ1;
-        this.game.colorJ2 = result.colorJ2;
-        this.game.gameMode = result.gameMode; */
       },
       error => {
         console.log(<any>error);

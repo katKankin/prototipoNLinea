@@ -47,12 +47,15 @@ module.exports = class Game {
                 this.matrix[y][x] = 1; // FICHA JUGADOR 2
                 this.turno = 2; // CAMBIO DE TURNO
                 this.jugada = true;
-                this.verificarGane();
+                this.verificarGaneHorizontalJ1();
             } else if (this.matrix[y + 1][x] !== 0) { // JUGAR SOBRE UNA FICHA
                 this.matrix[y][x] = 1; // FICHA JUGADOR 2
                 this.turno = 2; // CAMBIO DE TURNO
                 this.jugada = true;
-                this.verificarGane();
+                this.verificarGaneHorizontalJ1();
+                this.verificarGaneVerticalJ1();
+                this.verificarGaneDiagonalArribaJ1();
+                this.verificarGaneDiagonalAbajoJ1();
             } else {
                 this.turno = 1;
                 this.jugada = false;
@@ -63,158 +66,285 @@ module.exports = class Game {
                 this.matrix[y][x] = 2; // FICHA JUGADOR 2
                 this.turno = 1; // CAMBIO DE TURNO
                 this.jugada = true;
-                this.verificarGane();
+                this.verificarGaneHorizontalJ2();
             } else if (this.matrix[y + 1][x] !== 0) { // JUGAR SOBRE UNA FICHA
                 this.matrix[y][x] = 2; // FICHA JUGADOR 2
                 this.turno = 1; // CAMBIO DE TURNO
                 this.jugada = true;
-                this.verificarGane();
+                this.verificarGaneHorizontalJ2();
+                this.verificarGaneVerticalJ2();
+                this.verificarGaneDiagonalArribaJ2();
+                this.verificarGaneDiagonalAbajoJ2();
             } else {
                 this.turno = 2;
                 this.jugada = false;
             }
         }
     }
-    verificarGane() { // condicionar:
-            this.verificarGaneHorizontal();
-            this.verificarGaneVertical();
-            this.verificarGaneDiagonalArriba();
-            this.verificarGaneDiagonalAbajo();
-        }
-        // VERIFICA EL GANE EN HORIZONTAL
-    verificarGaneHorizontal() {
-        //console.log(this.matrix)
-        for (var i = 0; i < this.size; i++) { // RECORRE COLUMNAS
-            for (var e = 0; e < this.size; e++) { // RECORRE FILAS
-                if ((this.matrix[i][e] == 1) && (this.matrix[i][e + 1] == 1)) { // VERIFICA QUE HAYA MAS DE 1 FICHA JUNTA
-                    this.fichasJ1++; // AUMENTA LA CANTIDAD DE FICHA DEL JUGADOR 1
-                    this.matrix[i][e] = 3; // CAMBIA DE 1 A 3 PARA CONTAR LAS FICHAS SOLO 1 VEZ ???
-                    e++; // VERIFICA SI LA SIGUIENTE FICHA ES DEL JUGADOR 1
-                    if (this.fichasJ1 >= this.toWin) { // MAYOR O IGUAL PORQUE EL GANE SE PUEDE FORMAR CON UNA FICHA MAS
-                        // alert("Jugador 1 ha ganado");
-                        this.turno = 1; // se cambia porque en la llamada, el turno se cambia antes de verificar
-                        this.win = true;
-                        this.fichasJ1 = 0;
-                        this.fichasJ2 = 0;
-                        // cleanData();
-                    }
 
-
-
+    
+    // VERIFICA EL GANE EN HORIZONTAL JUGADOR 1
+    verificarGaneHorizontalJ1(){
+        for (var x = 0; x <= this.size-1;  x++) {
+            for (var y = 0; y <= this.size-1;  y++) {
+                if(this.matrix[x][y] === 1){
+                    for(var f= 0; f <= this.size-1; f++ ){
+                        if(this.matrix[x][f] === 1){
+                            this.fichasJ1++;
+                            if(this.fichasJ1 >= this.toWin){
+                                this.fichasJ1 = 0;
+                                this.fichasJ2 = 0;
+                                this.turno = 1; // se cambia porque en la llamada, el turno se cambia antes de verificar
+                                this.win = true;
+                            }
+                        }
+                        else{
+                            this.fichasJ1 = 0;
+                        }
+                    } 
                 }
-                if ((this.matrix[i][e] == 2) && (this.matrix[i][e + 1] == 2)) { // VERIFICA QUE HAYA MAS DE 1 FICHA JUNTA
-                    this.fichasJ2++; // AUMENTA LA CANTIDAD DE FICHA DEL JUGADOR 2
-                    this.matrix[i][e] = 4; // CAMBIA DE 2 A 4 PARA CONTAR LAS FICHAS SOLO 1 VEZ
-                    e++; // VERIFICA SI LA SIGUIENTE FICHA ES DEL JUGADOR 2
-                    if (this.fichasJ2 >= this.toWin) { // MAYOR O IGUAL PORQUE EL GANE SE PUEDE FORMAR CON UNA FICHA MAS
-                        // alert("Jugador 2 ha ganado");
-                        this.turno = 2;
-                        this.win = true;
-                        this.fichasJ1 = 0;
-                        this.fichasJ2 = 0;
-                    }
+                else{
+                    this.fichasJ1=0;
+                }
+            }  
+        }
+    }
 
+    // VERIFICA EL GANE EN HORIZONTAL JUGADOR 2
+    verificarGaneHorizontalJ2(){
+        for (var x = 0; x <= this.size-1;  x++) {
+            for (var y = 0; y <= this.size-1;  y++) {
+                if(this.matrix[x][y] === 2){
+                    for(var f= 0; f <= this.size-1; f++ ){
+                        if(this.matrix[x][f] === 2){
+                            this.fichasJ2++;
+                            if(this.fichasJ2 >= this.toWin){
+                                this.fichasJ1 = 0;
+                                this.fichasJ2 = 0;
+                                this.turno = 2; // se cambia porque en la llamada, el turno se cambia antes de verificar
+                                this.win = true;
+                            }
+                        }
+                        else{
+                            this.fichasJ2 = 0;
+                        }
+                    }  
+                }
+                else{
+                    this.fichasJ2 = 0;
                 }
             }
         }
     }
 
-    // VERIFICA EL GANE EN VERTICAL
-    verificarGaneVertical() {
-        for (var i = 0; i < this.size; i++) { // RECORRE COLUMNAS
-            for (var e = 0; e < this.size; e++) { // RECORRE FILAS
-                if ((this.matrix[i][e] == 1) && (this.matrix[i - 1][e] == 1)) { // VERIFICA GANE JUGADOR 1 SOLO PARA 2 FICHAS JUNTAS
-                    this.matrix[i][e] = 3; // CAMBIA DE 1 A 3 PARA CONTAR LAS FICHAS SOLO 1 VEZ
-                    i--; // VERIFICA SI LA ANTERIOR FICHA ES DEL JUGADOR 1
-                    this.fichasJ1++; // AUMENTA LA CANTIDAD DE FICHA DEL JUGADOR 1
-                    if (this.fichasJ1 + 1 >= this.toWin) { // MAYOR O IGUAL PORQUE EL GANE SE PUEDE FORMAR CON UNA FICHA MAS
-                        // alert("Jugador 2 ha ganado");
-                        this.turno = 1; // se cambia porque en la llamada, el turno se cambia antes de verificar
-                        this.win = true;
-                        this.fichasJ1 = 0;
-                        this.fichasJ2 = 0;
-                    }
-
+    // VERIFICA EL GANE EN VERTICAL JUGADOR 1
+    verificarGaneVerticalJ1(){
+        for (var x = 0; x <= this.size-1;  x++) {
+            for (var y = 0; y <= this.size-1;  y++) {
+                if(this.matrix[x][y] === 1){
+                    for(var f= 0; f <= this.size-1; f++ ){
+                        if(this.matrix[f][y] === 1){
+                            this.fichasJ1++;
+                            if(this.fichasJ1 >= this.toWin){
+                                this.fichasJ1 = 0;
+                                this.fichasJ2 = 0;
+                                this.turno = 1; // se cambia porque en la llamada, el turno se cambia antes de verificar
+                                this.win = true;
+                            }
+                        }
+                        else{
+                            this.fichasJ1 = 0;
+                        }
+                    }  
                 }
-
-                if ((this.matrix[i][e] == 2) && (this.matrix[i - 1][e] == 2)) { // VERIFICA GANE JUGADOR 2 SOLO PARA 2 FICHAS JUNTAS
-                    this.matrix[i][e] = 4; // CAMBIA DE 2 A 4 PARA CONTAR LAS FICHAS SOLO 1 VEZ
-                    i--; // VERIFICA SI LA ANTERIOR FICHA ES DEL JUGADOR 1
-                    this.fichasJ2++; // AUMENTA LA CANTIDAD DE FICHA DEL JUGADOR 2
-                    if (this.fichasJ2 >= this.toWin) { // MAYOR O IGUAL PORQUE EL GANE SE PUEDE FORMAR CON UNA FICHA MAS
-                        // alert("Jugador 2 ha ganado");
-                        this.turno = 2; // se cambia porque en la llamada, el turno se cambia antes de verificar
-                        this.win = true;
-                        this.fichasJ1 = 0;
-                        this.fichasJ2 = 0;
-                    }
+                else{
+                    this.fichasJ1 = 0;
                 }
             }
         }
     }
 
-    // VERIFICA EL GANE EN DIAGONAL, DE ABAJO A ARRIBA
-    verificarGaneDiagonalArriba() {
-        for (var i = 0; i < this.size; i++) { // RECORRE COLUMNAS
-            for (var e = 0; e < this.size; e++) { // RECORRE FILAS
-                if ((this.matrix[i][e] == 1) && (this.matrix[i - 1][e + 1] == 1)) { // VERIFICA QUE HAYA MAS DE 1 FICHA JUNTA
-                    this.matrix[i][e] = 3; // CAMBIA DE 1 A 3 PARA CONTAR LAS FICHAS SOLO 1 VEZ
-                    this.fichasJ1++; // AUMENTA LA CANTIDAD DE FICHA DEL JUGADOR 1
-                    if (this.fichasJ1 >= this.toWin) { // MAYOR O IGUAL PORQUE EL GANE SE PUEDE FORMAR CON UNA FICHA MAS
-                        // alert("Jugador 1 ha ganado");
-                        this.turno = 1; // se cambia porque en la llamada, el turno se cambia antes de verificar
-                        this.win = true;
-                        this.fichasJ1 = 0;
-                        this.fichasJ2 = 0;
-                    }
+    // VERIFICA EL GANE EN VERTICAL JUGADOR 2
+    verificarGaneVerticalJ2(){
+        for (var x = 0; x <= this.size-1;  x++) {
+            for (var y = 0; y <= this.size-1;  y++) {
+                if(this.matrix[x][y] === 2){
+                    for(var f= 0; f <= this.size-1; f++ ){
+                        if(this.matrix[f][y] === 2){
+                            this.fichasJ2++;
+                            if(this.fichasJ2 === this.toWin){
+                                this.fichasJ1 = 0;
+                                this.fichasJ2 = 0;
+                                this.turno = 2; // se cambia porque en la llamada, el turno se cambia antes de verificar
+                                this.win = true;
+                            }
+                        }
+                        else{
+                            this.fichasJ2 = 0;
+                        }
+                    }  
                 }
-
-                if ((this.matrix[i][e] == 2) && (this.matrix[i - 1][e + 1] == 2)) { // VERIFICA QUE HAYA MAS DE 1 FICHA JUNTA
-                    this.matrix[i][e] = 4; // CAMBIA DE 2 A 4 PARA CONTAR LAS FICHAS SOLO 1 VEZ
-                    this.fichasJ2++; // AUMENTA LA CANTIDAD DE FICHA DEL JUGADOR 2
-                    if (this.fichasJ2 >= this.toWin) { // MAYOR O IGUAL PORQUE EL GANE SE PUEDE FORMAR CON UNA FICHA MAS
-                        // alert("Jugador 2 ha ganado");
-                        this.turno = 2; // se cambia porque en la llamada, el turno se cambia antes de verificar
-                        this.win = true;
-                        this.fichasJ1 = 0;
-                        this.fichasJ2 = 0;
-                    }
+                else{
+                    this.fichasJ2 = 0;
                 }
             }
         }
     }
 
-    // VERIFICA EL GANE EN DIAGONAL, DE ARRIBA A ABAJO
-    verificarGaneDiagonalAbajo() {
-        for (var i = 0; i < this.size; i++) { // RECORRE COLUMNAS
-            for (var e = 0; e < this.size; e++) { // RECORRE FILAS
-                if ((this.matrix[i][e] == 1) && (this.matrix[i - 1][e - 1] == 1)) { // VERIFICA QUE HAYA MAS DE 1 FICHA JUNTA
-                    this.matrix[i][e] = 3; // CAMBIA DE 1 A 3 PARA CONTAR LAS FICHAS SOLO 1 VEZ
-                    this.fichasJ1++; // AUMENTA LA CANTIDAD DE FICHA DEL JUGADOR 1
-                    if (this.fichasJ1 >= this.toWin) { // MAYOR O IGUAL PORQUE EL GANE SE PUEDE FORMAR CON UNA FICHA MAS
-                        // alert("Jugador 1 ha ganado");
-                        this.turno = 1; // se cambia porque en la llamada, el turno se cambia antes de verificar
-                        this.win = true;
-                        this.fichasJ1 = 0;
-                        this.fichasJ2 = 0;
+    // VERIFICA EL GANE EN DIAGONAL, DE ARRIBA A ARRIBA JUGADOR 1 /
+    verificarGaneDiagonalArribaJ1() {
+        for (var x = 0; x <= this.size-1; x++) {
+            for (var y = 0; y<= this.size-1 ;y++) {
+                if(this.matrix[x][y] === 1){
+                    var f = x;
+                    this.fichasJ1=0;
+                    for( var c = y; c < this.size; c++){
+                        if(this.matrix[f][c] === 1){
+                            this.fichasJ1++;
+                            if(this.fichasJ1 === this.toWin){
+                                this.fichasJ1 = 0;
+                                this.fichasJ2 = 0;
+                                this.turno = 1; // se cambia porque en la llamada, el turno se cambia antes de verificar
+                                this.win = true;
+                                break;
+                            }
+                            f--;
+                            if (f === -1) {
+                                break;
+                            }
+                        } else { 
+                            this.fichasJ1=0;
+                            break;}
+                        /* if(this.matrix[f][c] != 1){
+                            this.fichasJ1DR=0;
+                            break;
+                        } */
                     }
+                    //break;
                 }
-
-                if ((this.matrix[i][e] == 2) && (this.matrix[i - 1][e - 1] == 2)) { // VERIFICA QUE HAYA MAS DE 1 FICHA JUNTA
-                    this.matrix[i][e] = 4; // CAMBIA DE 1 A 3 PARA CONTAR LAS FICHAS SOLO 1 VEZ
-                    this.fichasJ2++; // AUMENTA LA CANTIDAD DE FICHA DEL JUGADOR 1
-                    if (this.fichasJ2 >= this.toWin) { // MAYOR O IGUAL PORQUE EL GANE SE PUEDE FORMAR CON UNA FICHA MAS
-                        // alert("Jugador 2 ha ganado");
-                        this.turno = 2; // se cambia porque en la llamada, el turno se cambia antes de verificar
-                        this.win = true;
-                        this.fichasJ1 = 0;
-                        this.fichasJ2 = 0;
-                    }
+                if(this.fichasJ1 === this.toWin){
+                    break;
                 }
+                
+            }
+            if(this.fichasJ1 === this.toWin){
+                break;
             }
         }
     }
 
+    // VERIFICA EL GANE EN DIAGONAL, DE ARRIBA A ARRIBA JUGADOR 2 /
+    verificarGaneDiagonalArribaJ2() {
+        for (var x = this.size-1; x >= 0 ;x--) {
+            for (var y = 0; y<= this.size-1 ;y++) {
+                if(this.matrix[x][y] === 2){
+                    var f = x;
+                    this.fichasJ2 = 0;
+                    for( var c = y; c < this.size; c++){
+                        if(this.matrix[f][c] === 2){
+                            this.fichasJ2++;
+                            if(this.fichasJ2 === this.toWin){
+                                this.fichasJ1 = 0;
+                                this.fichasJ2 = 0;
+                                this.turno = 2; // se cambia porque en la llamada, el turno se cambia antes de verificar
+                                this.win = true;
+                                break;
+                            }
+                            f--;
+                            if (f === -1) {
+                                break;
+                            }
+                        } else { 
+                            this.fichasJ2=0;
+                            break;
+                        }
+                    }
+                }
+                if(this.fichasJ2 === this.toWin){
+                    break;
+                }
+                
+            }
+            if(this.fichasJ2 === this.toWin){
+                break;
+            }
+        }
+    }
+    
+    // VERIFICA EL GANE EN DIAGONAL, DE ABAJO A ARRIBA JUGADOR 1 \
+    verificarGaneDiagonalAbajoJ1() {
+        for (var x = 0; x <= this.size-1; x++) {
+            for (var y = 0; y<= this.size-1 ;y++) {
+                if(this.matrix[x][y] === 1){
+                    var f = x;
+                    this.fichasJ1=0;
+                    for( var c = y; c >= 0; c--){
+                        if(this.matrix[f][c] === 1){
+                            this.fichasJ1++;
+                            if(this.fichasJ1 === this.toWin){
+                                this.fichasJ1 = 0;
+                                this.fichasJ2 = 0;
+                                this.turno = 1; // se cambia porque en la llamada, el turno se cambia antes de verificar
+                                this.win = true;
+                                break;
+                            }
+                            f--;
+                            if( (f === -1) ){
+                                break;
+                            }
+                        } else { 
+                            this.fichasJ1=0;
+                            break;
+                        }
+                    }
+                }
+                if(this.fichasJ1 === this.toWin){
+                    break;
+                }
+                
+            }
+            if(this.fichasJ1 === this.toWin){
+                break;
+            }
+        }
+    }
+
+    // VERIFICA EL GANE EN DIAGONAL, DE ABAJO A ARRIBA JUGADOR 2 \
+    verificarGaneDiagonalAbajoJ2() {
+        for (var x = 0; x <= this.size-1; x++) {
+            for (var y = 0; y<= this.size-1 ;y++) {
+                if(this.matrix[x][y] === 2){
+                    var f = x;
+                    this.fichasJ2 = 0;
+                    for( var c = y; c >= 0; c--){
+                        if(this.matrix[f][c] === 2){
+                            this.fichasJ2++;
+                            if(this.fichasJ2 === this.toWin){
+                                this.fichasJ1 = 0;
+                                this.fichasJ2 = 0;
+                                this.turno = 2; // se cambia porque en la llamada, el turno se cambia antes de verificar
+                                this.win = true;
+                                break;
+                            }
+                            f--;
+                            if (f === -1) {
+                                break;
+                            }
+                        } else { 
+                            this.fichasJ2=0;
+                            break;
+                        }
+                    }
+                }
+                if(this.fichasJ2 === this.toWin){
+                    break;
+                }
+            }
+            if(this.fichasJ2 === this.toWin){
+                break;
+            }
+        }
+    }
 };
 
 

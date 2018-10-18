@@ -56,13 +56,21 @@ export class DashboardComponent implements OnInit {
           console.log('MATRIZ: ', this.game.matrix);
           if (this.game.win === true) {
             if (this.game.turno === 1) {
-              ctx.fillStyle =  this.game.colorJ1; // 'rgb(160, 140, 160)'; // DEFINE EL COLOR DE LA FIGUTA
+              ctx.fillStyle =  this.game.colorJ2; // 'rgb(160, 140, 160)'; // DEFINE EL COLOR DE LA FIGUTA
               ctx.fillRect(this.game.coordX * 90, this.game.coordY * 90, 90, 90);
-              alert('JUGADOR 1 GANA');
+              if (confirm("JUGADOR 1 GANA")) {
+                console.log("ok");
+              } else {
+                this.drawRectable();
+              }
             } else {
               ctx.fillStyle = this.game.colorJ2; // 'rgb(100, 100, 100)'; // DEFINE EL COLOR DE LA FIGUTA
               ctx.fillRect(this.game.coordX * 90, this.game.coordY * 90, 90, 90);
-              alert('JUGADOR 2 GANA');
+              if (confirm("JUGADOR 2 GANA")) {
+                console.log("ok");
+              } else {
+                this.drawRectable();
+              }
             }
           } else {
             if (this.game.jugada === false) {

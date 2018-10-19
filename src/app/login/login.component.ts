@@ -98,7 +98,7 @@ export class LoginComponent implements OnInit {
       this._settingsService.setData(this.userData).subscribe(
         result => { // llamar no a un service si no hacer la petición directamente 
           this.userData.userName = result.userName;
-          // console.log('NOMBRE RECIBIDO: ', this.userData.userName);
+          console.log('NOMBRE RECIBIDO: ', this.userData.userName);
         },
         error => {
           console.log(<any>error);
@@ -128,7 +128,7 @@ export class LoginComponent implements OnInit {
     .catch((err) => console.log('error: ' + err)); }
 
   signInWithGoogle() {
-    console.log(this.userData.userName);
+    // console.log(this.userData.userName);
       // this.afauth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
     this.authService.signInWithGoogle()
     .then((res) => {

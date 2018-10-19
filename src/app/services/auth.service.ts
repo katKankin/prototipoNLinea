@@ -4,11 +4,11 @@ import * as firebase from 'firebase/app';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Observable } from 'rxjs';
 // import 'rxjs/add/operator/map';
-import { AngularFireDatabaseModule, AngularFireDatabase } from 'angularfire2/database';
+import {AngularFireDatabase } from 'angularfire2/database';
 @Injectable()
 export class AuthService {
   private user: Observable<firebase.User>;
-  private userDetails: firebase.User = null;
+  public userDetails: firebase.User = null;
   constructor(
     public _firebaseAuth: AngularFireAuth,
     private router: Router,
@@ -18,34 +18,28 @@ export class AuthService {
       this.user.subscribe((user) => {
         if (user) {
           this.userDetails = user;
-          // console.log(this.userDetails);
         } else {
           this.userDetails = null;
         }
       }
     );
   }
-  addUser(data, uId) { // FUNCIÓN QUE GUARDA A UN USUARIO EN LA BASE DE DATOS
-    const obj = this.db.database.ref('Usuarios' );
-    obj.push({email: data, uid: uId, juego: 'pendiente'}); // SE DEFINE CUÁLES DATOS SE VAN A GUARDAR
-    console.log('Success');
+   // ----------------- FUNCIONES PARA LA GESTIÓN DE USUARIOS EN FIREBASE -------------------
+   addUser(data, uId, number) { // FUNCIÓN QUE GUARDA A UN USUARIO EN LA BASE DE DATOS
+    const obj = this.db.database.ref('Usuarios');
+    obj.push({email: data, uid: uId, juegoID: number}); // SE DEFINE CUÁLES DATOS SE VAN A GUARDAR
+    // console.log('Success');
   }
-  showUser(uidA) { // MUESTRA A UN USUARIO CUANDO INICIA SESIÓN DESDE FB // uidx: (this.afAuth.auth.currentUser.uid)
-  if (this.db.database.ref('Usuarios/' + this.userDetails.uid).equalTo(uidA) ) {
-      console.log( 'EMAIL del usuario ingresado: ' + this.userDetails.email + 'UID-AUTH:' + this.userDetails.uid);
+  showUser(uidA) { // MUESTRA A UN USUARIO CUANDO INICIA SESIÓN DESDE
+  if (this.db.database.ref('Usuarios/' + this.userDetails.uid).equalTo(uidA)) {
+      // console.log( 'User EMAIL: ' + this.userDetails.email + 'UID-AUTH:' + this.userDetails.uid);
   } else {
-    console.log ('Datos del usuario no encontrado');
+    console.log ('Unknown data ');
   }
-    // ----------------------------------------------------
-     // IMPRIME A TODOS LOS USUARIOS DE LA BD, once: lee datos una sola vez
-     /*const dataRef = this.db.database.ref('/Usuarios');
-    dataRef.once('value' , snapshot => {
-        console.log(snapshot.val());
-    });*/
-    }
+  }
   signInRegular(email, password) {
     const credential = firebase.auth.EmailAuthProvider.credential( email, password );
-    this.showUser(this.afAuth.auth.currentUser.uid); // PARA PROBAR FUNCIÓN SHOWUSER
+    this.showUser(this.afAuth.auth.currentUser.uid);
     return this._firebaseAuth.auth.signInWithEmailAndPassword(email, password);
   }
 
@@ -58,9 +52,9 @@ export class AuthService {
       //  --------ESTA SECCIÓN VERIFICA SI EL USUARIO EXISTE EN LA BD, SI NO EXISTE SE AGREGA A LA BD----
       const uidA = this.afAuth.auth.currentUser.uid;
       if (this.db.database.ref('Usuarios/' + this.userDetails.uid).equalTo(uidA) ) {
-      console.log( 'usuario existe');
+      // console.log( 'The user is already registered');
       } else {
-        this.addUser(this.afAuth.auth.currentUser.email, this.afAuth.auth.currentUser.uid);
+        this.addUser(this.afAuth.auth.currentUser.email, this.afAuth.auth.currentUser.uid, 1);
       }
      // ----------------------------------------------------------
       }, err => {
@@ -68,9 +62,6 @@ export class AuthService {
         reject(err);
       });
     });
-    /* return this._firebaseAuth.auth.signInWithPopup(
-      new firebase.auth.GoogleAuthProvider()
-    ); */
   }
 
   signInWithFacebook() {
@@ -82,9 +73,9 @@ export class AuthService {
         //  -----ESTA SECCIÓN VERIFICA SI EL USUARIO EXISTE EN LA BD, SI NO EXISTE SE AGREGA A LA BD----
       const uidA = this.afAuth.auth.currentUser.uid;
       if (this.db.database.ref('Usuarios/' + this.userDetails.uid).equalTo(uidA) ) {
-      console.log( 'usuario existe');
+      console.log( 'Unknow user');
       } else {
-        this.addUser(this.afAuth.auth.currentUser.email, this.afAuth.auth.currentUser.uid);
+        this.addUser(this.afAuth.auth.currentUser.email, this.afAuth.auth.currentUser.uid, 1);
       }
      // ----------------------------------------------------------
       }, err => {
@@ -100,7 +91,7 @@ export class AuthService {
       .then( userData =>  resolve(userData),
       err => reject (err));
       // ------- CADA REGISTRO DE USUARIO CON EMAIL SE GUARDA EN REALTIMEDB -----------
-      this.addUser(this.afAuth.auth.currentUser.email, this.afAuth.auth.currentUser.uid);
+      this.addUser(this.afAuth.auth.currentUser.email, this.afAuth.auth.currentUser.uid, 1);
     });
   }
   isLoggedIn() {
@@ -110,7 +101,7 @@ export class AuthService {
       return true;
     }
   }
-  logout() { // ???
+  logout() {
     this._firebaseAuth.auth.signOut()
     .then((res) => this.router.navigate(['/']));
     return this.afAuth.auth.signOut();

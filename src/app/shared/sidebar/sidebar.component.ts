@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SidebarService } from '../../services/service.index';
+import { SidebarService, MenuService } from '../../services/service.index';
 
 @Component({
   selector: 'app-sidebar',
@@ -7,8 +7,18 @@ import { SidebarService } from '../../services/service.index';
   styles: []
 })
 export class SidebarComponent implements OnInit {
+  name: string;
+  constructor( public _sidebar: SidebarService, public _settingsService: MenuService ) { 
+    this._settingsService.retrieveData().subscribe(
+      result => { // llamar no a un service si no hacer la petición directamente
 
-  constructor( public _sidebar: SidebarService ) { }
+        this.name = result.name; // verificar el dato de otra manera
+      },
+      error => {
+        console.log(<any>error);
+      }
+    );
+  }
 
   ngOnInit() {
   }

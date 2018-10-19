@@ -1,7 +1,4 @@
-// notas: 
-// .json devuelve res en un json
-// AQUÍ ESTÁN LOS ENDPOINTS DEL JUEGO
-// SE ESTÁ USANDO ESTE FRAMEWORK, ESTO SON PUROS IMPORTS
+// SE ESTÁ USANDO ESTE FRAMEWORK
 var express = require('express');
 
 var app = express();
@@ -31,12 +28,10 @@ app.get('/', function(req, res) {
 
 app.post('/setGame', function(req, res) {
 
-    // console.log(req.body.size);
     game = new Game(req.body.size, req.body.toWin);
     game.createBoard();
     game.setConfig(req.body.colorJ1, req.body.colorJ2, req.body.gameMode);
-    // setteo la configuración del tablero que viene desde el front req.body.n
-    //game.matrix = req.body.matrix; // se asigna lo que viene desde el front, probar desde angular
+
     res.status(200).json({
         ok: true,
         mensaje: 'OK SET GAME!!',
@@ -50,7 +45,7 @@ app.post('/setGame', function(req, res) {
 });
 app.get('/getGame', function(req, res) {
 
-    // console.log(req.body.size);
+    // console.log('GETGAME ENDPOINT: ', game.gameMode);
 
     res.status(200).json({
         ok: true,
@@ -60,18 +55,20 @@ app.get('/getGame', function(req, res) {
         colorJ2: game.colorJ2,
         gameMode: game.gameMode,
         size: game.size
-            // colores: gameConfig.colores
     });
 });
 app.post('/makePlay', function(req, res) {
 
     // DEPENDE DE LO QUE TRAE EL FRONT END ASÍ VA LLAMAR A UNA FUNCIÓN
     // IF GAME MODE == 1, 2, 3, 4 --> CALL LEVEL FUNCTION
-    if (req.body.gameMode == 1) {
+
+    game.tryPlay(req.body.coordX, req.body.coordY);
+
+    /* if (game.gameMode == 1) {
         game.tryPlay(req.body.coordX, req.body.coordY);
-    } else if (req.body.gameMode == 2) {
+    } else if (game.gameMode == 2) {
         game.tryPlayAut2(req.body.coordX, req.body.coordY);
-    }
+    } */
 
 
     res.status(200).json({
@@ -84,7 +81,9 @@ app.post('/makePlay', function(req, res) {
         win: game.win,
         turno: game.turno,
         colorJ1: game.colorJ1,
-        colorJ2: game.colorJ2
+        colorJ2: game.colorJ2,
+        coordXA: game.coordXA,
+        coordYA: game.coordYA
     });
 });
 app.post('/setUserData', function(req, res) {
@@ -99,8 +98,7 @@ app.post('/setUserData', function(req, res) {
     });
 });
 app.get('/getUserData', function(req, res) {
-    /* game.coordX = req.body.coordX;
-    game.coordY = req.body.coordY; */
+
     var name = userdata.getUserData();
 
 

@@ -25,16 +25,4 @@ export class MenuService {
     console.log('GENERATING REQUEST...\n');
     return this.http.get(url, {headers: headers});
   }
-
-
-
-
 }
- /*  setData(userData: UserData): Observable<any> {
-    const params = JSON.stringify(userData);
-    const headers = new HttpHeaders().set('Content-Type', 'application/json'); 
-    const url = URL_SERVICIOS + '/game/setuserdata';
-    console.log('GENERATING REQUEST...\n');
-    return this.http.post(url, params, {headers: headers});
-  }
-} */

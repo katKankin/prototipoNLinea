@@ -13,9 +13,6 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './login/register.component';
 import { FormsModule } from '@angular/forms';
 
-// UTILS CANVAS
-import { handleActions } from 'canvas-utils';
-
 // SERVICIOS
 import { ServiceModule } from './services/service.module';
 // checkear en los imports de abajo

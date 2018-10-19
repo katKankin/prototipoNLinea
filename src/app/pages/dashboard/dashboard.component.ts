@@ -1,7 +1,10 @@
-import { Component, OnInit, Input} from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { GameService } from '../../services/service.index';
 import { Game } from '../../models/game.model';
 import swal from 'sweetalert';
+import { Router } from '@angular/router';
+import {  AngularFireDatabase, AngularFireList } from 'angularfire2/database';
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -9,15 +12,45 @@ import swal from 'sweetalert';
 })
 export class DashboardComponent implements OnInit {
   game: Game;
-  constructor( public _gaming: GameService) {
+  idPlayer: string;
+  idToPlay: string; // GUARDA EL ID DEL USUARIO QUE SE DESEA CONSULTAR EN LA BD
+  constructor( public _gaming: GameService, private db: AngularFireDatabase, public router: Router) {
 
    }
   ngOnInit() {
-    // CADA VEZ QUE SE CREA UN NUEVO JUEGO SE CARGAN LOS DATOS DESDE EL BACKEND
+
     this.drawRectable();
 
   }
+  exit() {
+    this.router.navigate(['/']);
+  }
+  resetGame() {
+    this._gaming.newGame(this.game).subscribe(
+      result => {
+        this.game.matrix = result.matrix;
+        this.game.colorJ1 = result.colorJ1;
+        this.game.colorJ2 = result.colorJ2;
+        this.game.gameMode = result.gameMode;
+        this.drawRectable();
+      },
+      error => {
+        console.log(<any>error);
+      }
 
+    );
+   }
+
+  showMatrix(idToPlay) { // MUESTRA El JUEGO DE OTRO USUARIO
+    // console.log ('Mostrando el juego del usuario: ' + idToPlay);
+    if (this.db.database.ref('Juegos/' +  'Id').equalTo(idToPlay)) {
+      this.db.database.ref('Juegos/' +  idToPlay + '/Matrix').on('value', function(snap) {
+        console.log(snap.val());
+        });
+    } else {
+      console.log ('Datos no encontrados');
+    }
+  }
   // -----------------------------------------------------------------------------------------------------
   // FUNCIÓN QUE PINTA CANVAS CUANDO SE PROCESA LA LÓGICA DESDE EL BACKEND
   // -----------------------------------------------------------------------------------------------------
@@ -39,7 +72,7 @@ export class DashboardComponent implements OnInit {
       }
       this._gaming.playGame(this.game).subscribe(
         result => { // CARGA EL JSON CON LOS DATOS QUE RESPONDE EL BACK END
-          this.game.matrix = result.matrix; // SE LO ASIGNO A LA VAR TIPO game (game.model)
+          this.game.matrix = result.matrix;
           this.game.coordX = result.coordX;
           this.game.coordY = result.coordY;
           this.game.jugada = result.jugada;
@@ -47,36 +80,45 @@ export class DashboardComponent implements OnInit {
           this.game.turno = result.turno;
           this.game.colorJ1 = result.colorJ1;
           this.game.colorJ2 = result.colorJ2;
-          
-            console.log('MATRIZ: ', this.game.matrix);
-            if (this.game.win === true) {
-              if (this.game.turno === 1) {
-                ctx.fillStyle =  this.game.colorJ2; // 'rgb(160, 140, 160)'; // DEFINE EL COLOR DE LA FIGUTA
-                ctx.fillRect(this.game.coordX * 90, this.game.coordY * 90, 90, 90);
-                swal('Has ganado!', 'JUGADOR 1 GANA', 'success');
-                // alert('JUGADOR 1 GANA');
-              } else {
-                ctx.fillStyle = this.game.colorJ1; // 'rgb(100, 100, 100)'; // DEFINE EL COLOR DE LA FIGUTA
-                ctx.fillRect(this.game.coordX * 90, this.game.coordY * 90, 90, 90);
-                swal('Has ganado!', 'JUGADOR 2 GANA', 'success');
-                // alert('JUGADOR 2 GANA');
-              }
+          this.game.coordXA = result.coordXA;
+          this.game.coordYA = result.coordYA;
+
+        // ------------------SE GUARDA LA INFORMACIÓN EN FIREBASE---------------------------------
+          if (this.db.database.ref( 'Juegos/' + 'Id' ).equalTo(this.idPlayer )) {
+            this.db.database.ref('Juegos/' + this.idPlayer + '/'  + 'Matrix').set(this.game.matrix);
+            this.db.database.ref('Juegos/' + this.idPlayer + '/'  + 'Turno').set(this.game.turno);
+            this.db.database.ref('Juegos/' + this.idPlayer + '/'  + 'CantidadGane').set(this.game.win);
+            this.db.database.ref('Juegos/' + this.idPlayer + '/'  + 'Disponible').set('true');
+          }
+        this.idToPlay = 'jugador2';
+        this.showMatrix('jugador2');
+        // ----------------------------------------------------------------------------------------
+          console.log('MATRIZ: ', this.game.matrix);
+          if (this.game.win === true) {
+            if (this.game.turno === 1) {
+              ctx.fillStyle =  this.game.colorJ2; // 'rgb(160, 140, 160)'; // DEFINE EL COLOR DE LA FIGUTA
+              ctx.fillRect(this.game.coordX * 90, this.game.coordY * 90, 90, 90);
+              swal('¡Has ganado!', 'JUGADOR 1 GANA', 'success');
+              // alert('JUGADOR 1 GANA');
             } else {
-              if (this.game.jugada === false) {
-                swal('Oops!', 'Jugada inválida', 'warning');
-                // alert('JUGADA INVALIDA');
+              ctx.fillStyle = this.game.colorJ1; // 'rgb(100, 100, 100)'; // DEFINE EL COLOR DE LA FIGUTA
+              ctx.fillRect(this.game.coordX * 90, this.game.coordY * 90, 90, 90);
+              swal('¡Has ganado!', 'JUGADOR 2 GANA', 'success');
+            }
+          } else {
+            if (this.game.jugada === false) {
+              swal('¡Oops!', 'Jugada inválida', 'warning');
+            } else {
+              if (this.game.turno === 2) {
+                ctx.fillStyle = this.game.colorJ2; // DEFINE EL COLOR DE LA FIGUTA
+                ctx.fillRect(this.game.coordX * 90, this.game.coordY * 90, 90, 90);
               } else {
-                if (this.game.turno === 2) {
-                  /* console.log('ESTADO MATRIZ: ', this.game.matrix, '\nTURNO: ', this.game.turno,
-                    '\nSE PUEDE JUGAR?: ', this.game.jugada); */
-                  ctx.fillStyle = this.game.colorJ2; // DEFINE EL COLOR DE LA FIGUTA
-                  ctx.fillRect(this.game.coordX * 90, this.game.coordY * 90, 90, 90);
-                } else {
-                  ctx.fillStyle = this.game.colorJ1; // DEFINE EL COLOR DE LA FIGUTA
-                  ctx.fillRect(this.game.coordX * 90, this.game.coordY * 90, 90, 90);
-                }
+                ctx.fillStyle = this.game.colorJ1; // DEFINE EL COLOR DE LA FIGUTA
+                ctx.fillRect(this.game.coordX * 90, this.game.coordY * 90, 90, 90);
               }
             }
+          } // JUG AUTOMÁTICO
+
         },
         error => {
           console.log(<any>error);
@@ -99,6 +141,7 @@ export class DashboardComponent implements OnInit {
           result.colorJ2,
           result.gameMode);
           console.log('MATRIX: ', this.game.matrix);
+          console.log('GameMode: ', result.gameMode );
           const canvas: any = document.getElementById('stage');
           canvas.width = this.game.size * 90;  // VARIABLES QUE ACTUALIZAN LOS VALORES DEL CANVAS DE ACUERDO AL TAMAÑO DEL TABLERO
           canvas.height = this.game.size * 90;
@@ -112,6 +155,7 @@ export class DashboardComponent implements OnInit {
               }
             }
           }
+          this.idPlayer = 'jugador1';
       },
       error => {
         console.log(<any>error);

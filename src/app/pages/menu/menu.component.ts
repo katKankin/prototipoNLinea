@@ -72,7 +72,7 @@ export class MenuComponent implements OnInit {
 
      }
    }
-   setGame() { 
+   setGame() {
     this._gaming.newGame(this.game).subscribe(
       result => {
         this.game.matrix = result.matrix;

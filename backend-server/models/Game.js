@@ -12,7 +12,8 @@ module.exports = class Game {
         this.coordX = 0;
         this.coordY = 0;
         this.userData = '';
-
+        this.coordXA = 0;
+        this.coordYA = 0;
         // CONFIG
         this.colorJ1 = '';
         this.colorJ2 = '';
@@ -105,6 +106,8 @@ module.exports = class Game {
                 for (var pos = 0; pos < this.size; pos++) {
                     if (this.matrix[filas][this.numeros2[pos]] === 0) {
                         this.matrix[filas][this.numeros2[pos]] = 2;
+                        this.coordXA = filas;
+                        this.coordYA = this.numeros2[pos];
                         this.verificarGaneHorizontalJ2();
                         this.verificarGaneVerticalJ2();
                         this.verificarGaneDiagonalArribaJ2();
@@ -127,12 +130,16 @@ module.exports = class Game {
 
             if (this.fichasJ1 === this.toWin - 1) {
                 this.matrix[y - 1][x] = 2;
+                this.coordXA = x;
+                this.coordYA = y - 1;
                 this.fichasJ1 = 0;
             } else {
                 for (var filas = this.size - 1; filas >= 0; filas--) {
                     for (var pos = 0; pos <= this.size - 1; pos++) {
                         if (this.matrix[filas][this.numeros2[pos]] === 0) {
                             this.matrix[filas][this.numeros2[pos]] = 2;
+                            this.coordXA = filas;
+                            this.coordYA = this.numeros2[pos];
                             this.verificarGaneHorizontalJ2();
                             this.verificarGaneVerticalJ2();
                             this.verificarGaneDiagonalArribaJ2();
@@ -163,6 +170,8 @@ module.exports = class Game {
                 for (var pos = 0; pos < this.size; pos++) {
                     if (this.matrix[filas][this.numeros2[pos]] === 0) {
                         this.matrix[filas][this.numeros2[pos]] = 2;
+                        this.coordXA = filas;
+                        this.coordYA = this.numeros2[pos];
                         break;
                     }
                 }
@@ -190,9 +199,13 @@ module.exports = class Game {
             if (y != 0) {
                 if (this.fichasJ1 === this.toWin - 1) {
                     this.matrix[y - 1][x] = 2;
+                    this.coordXA = x;
+                    this.coordYA = y - 1;
                     this.fichasJ1 = 0;
                 } else if ((this.matrix[y - 1][x + 1] === 0) && (this.matrix[y][x + 1] != 0)) { // "/""
                     this.matrix[y - 1][x + 1] = 2;
+                    this.coordXA = x + 1;
+                    this.coordYA = y - 1;
                     //console.log("/");
                     this.verificarGaneHorizontalJ2();
                     this.verificarGaneVerticalJ2();
@@ -201,6 +214,8 @@ module.exports = class Game {
                     return;
                 } else if ((this.matrix[y - 1][x - 1] === 0) && (this.matrix[y][x - 1] != 0)) { // "\"
                     this.matrix[y - 1][x - 1] = 2;
+                    this.coordXA = x - 1;
+                    this.coordYA = y - 1;
                     //console.log("-/");
                     this.verificarGaneHorizontalJ2();
                     this.verificarGaneVerticalJ2();
@@ -209,6 +224,8 @@ module.exports = class Game {
                     return;
                 } else if ((this.matrix[y][x - 1] === 0) && (x - 1 < this.size)) { // "anterior"
                     this.matrix[y][x - 1] = 2;
+                    this.coordXA = x - 1;
+                    this.coordYA = y;
                     //console.log("<-");
                     this.verificarGaneHorizontalJ2();
                     this.verificarGaneVerticalJ2();
@@ -217,6 +234,8 @@ module.exports = class Game {
                     return;
                 } else if ((this.matrix[y][x + 1] === 0) && (x + 1 < this.size)) { // "siguiente"
                     this.matrix[y][x + 1] = 2;
+                    this.coordXA = x + 1;
+                    this.coordYA = y;
                     //console.log("->");
                     this.verificarGaneHorizontalJ2();
                     this.verificarGaneVerticalJ2();
@@ -225,6 +244,8 @@ module.exports = class Game {
                     return;
                 } else if (this.matrix[y - 1][x] === 0) { // "sobre"
                     this.matrix[y - 1][x] = 2;
+                    this.coordXA = x;
+                    this.coordYA = y - 1;
                     //console.log("|");
                     this.verificarGaneHorizontalJ2();
                     this.verificarGaneVerticalJ2();
@@ -237,6 +258,8 @@ module.exports = class Game {
                     for (var pos = 0; pos <= this.size - 1; pos++) {
                         if (this.matrix[filas][this.numeros2[pos]] === 0) {
                             this.matrix[filas][this.numeros2[pos]] = 2;
+                            this.coordXA = filas;
+                            this.coordYA = this.numeros2[pos];
                             //console.log("demas",filas,pos);
                             this.verificarGaneHorizontalJ2();
                             this.verificarGaneVerticalJ2();
@@ -270,6 +293,8 @@ module.exports = class Game {
                     for (var pos = 0; pos < this.size; pos++) {
                         if (this.matrix[filas][this.numeros2[pos]] === 0) {
                             this.matrix[filas][this.numeros2[pos]] = 2;
+                            this.coordXA = filas;
+                            this.coordYA = this.numeros2[pos];
                             break;
                         }
                     }
@@ -294,9 +319,13 @@ module.exports = class Game {
                     for (var filas = this.size - 1; filas >= 0; filas--) {
                         if (this.matrix[filas][x + 1] === 0) {
                             this.matrix[filas][x + 1] = 2;
+                            this.coordXA = filas;
+                            this.coordYA = x + 1;
                             return;
                         } else if (this.matrix[filas][x - 1] === 0) {
                             this.matrix[filas][x - 1] = 2;
+                            this.coordXA = filas;
+                            this.coordYA = x - 1;
                             return;
                         }
                     }
@@ -309,6 +338,8 @@ module.exports = class Game {
                     //if(this.matrix[x][y-1] === 0){
                     //console.log("v",y-1,x);
                     this.matrix[y - 1][x] = 2;
+                    this.coordXA = x;
+                    this.coordYA = y - 1;
                     this.fichasJ1 = 0;
                     //return;
                     //}
@@ -320,6 +351,8 @@ module.exports = class Game {
                     console.log(x, y);
                     if (this.matrix[y][x + 1] != 0) {
                         this.matrix[y - 1][x + 1] = 2;
+                        this.coordXA = x + 1;
+                        this.coordYA = y - 1;
                     } else {
                         return;
                     }
@@ -331,6 +364,8 @@ module.exports = class Game {
                     console.log(y, x - 1);
                     if (this.matrix[y][x - 1] != 0) {
                         this.matrix[y - 1][x - 1] = 2;
+                        this.coordXA = x - 1;
+                        this.coordYA = y - 1;
                     }
                     //else if()
                     else {
@@ -342,6 +377,8 @@ module.exports = class Game {
                         for (var pos = 0; pos <= this.size - 1; pos++) {
                             if (this.matrix[filas][this.numeros2[pos]] === 0) {
                                 this.matrix[filas][this.numeros2[pos]] = 2;
+                                this.coordXA = filas;
+                                this.coordYA = this.numeros2[pos];
                                 //console.log("demas",filas,pos);
                                 return;
                             }
@@ -881,50 +918,3 @@ module.exports = class Game {
         }
     }
 };
-
-
-/* */
-
-/* for (let x = 0; x <= this.game.size; x++) {
-        for (let y = 0; y <= this.game.size; y++) {
-          if ( (i >= x * 90 && i <= x * 90 + 90) && (j >= y * 90 && j <= y * 90 + 90) ) {
-            if (this.matrix[y][x] === 0) { // VERIFICA QUE LA CASILLA NO TIENE FICHA
-              if (this.turno === 1) {// FICHA JUGADOR 1
-                if ((y + 1  === this.game.size) && (this.matrix[y][x] === 0)) { // VERIFICA PARA COLOCAR LA FICHA EN LA ULTIMA FILA J1
-                  this.matrix[y][x] = 1; // COLOCA FICHA 1
-                  ctx.fillStyle = 'rgb(160, 140, 160)'; // DEFINE EL COLOR DE LA FIGUTA
-                  ctx.fillRect(x * 90, y * 90, 90, 90);
-                  this.turno = 2; // CAMBIO DE TURNO
-                  this.verificarGane();
-                } else if (this.matrix[y + 1][x] !== 0) { // JUGAR SOBRE UNA FICHA
-                  this.matrix[y][x] = 1; // FICHA JUGADOR 1
-                  ctx.fillStyle = 'rgb(160, 140, 160)';
-                  ctx.fillRect(x * 90, y * 90, 90, 90);
-                  this.turno = 2; // CAMBIO DE TURNO
-                  this.verificarGane();
-                } else {
-                  alert( 'Jugada invalida, debe de tener una ficha abajo');
-                }
-              } else if (this.turno === 2) { // JUGADOR 2
-                if ((y + 1 === this.game.size) && (this.matrix[y][x] === 0)) { // VERIFICA PARA COLOCAR LA FICHA EN LA ULTIMA FILA J2
-                  this.matrix[y][x] = 2; // FICHA JUGADOR 2
-                  ctx.fillStyle = 'rgb(190, 100, 80)'; // DEFINE EL COLOR DE LA FIGUTA
-                  ctx.fillRect(x * 90, y * 90, 90, 90);
-                  this.turno = 1; // CAMBIO DE TURNO
-                  this.verificarGane();
-                } else if (this.matrix[y + 1][x] !== 0) { // JUGAR SOBRE UNA FICHA
-                  this.matrix[y][x] = 2; // FICHA JUGADOR 2
-                  ctx.fillStyle = 'rgb(190, 100, 80)';
-                  ctx.fillRect(x * 90, y * 90, 90, 90);
-                  this.turno = 1; // CAMBIO DE TURNO
-                  this.verificarGane();
-                } else {
-                  alert('Jugada invalida, debe de tener una ficha abajo');
-                }
-              }
-            } else {
-              alert('Jugada invalida');
-            }
-          }
-        }
-      }*/

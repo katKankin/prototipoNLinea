@@ -12,6 +12,8 @@ export class Game {
         public win: boolean,
         public coordX: number= 0,
         public coordY: number= 0,
+        public coordXA: number = 0,
+        public coordYA: number = 0,
         // CONFIG:
         public colorJ1: string = 'rgb(255,0,0)',
         public colorJ2: string = 'rgb(255,0,0)',

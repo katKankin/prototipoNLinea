@@ -4,10 +4,10 @@ import { AuthService } from '../services/auth.service';
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
 import { Location } from '@angular/common';
-import { AngularFireDatabaseModule, AngularFireDatabase, AngularFireList } from 'angularfire2/database';
-
+import { AngularFireDatabase } from 'angularfire2/database';
 import { MenuService } from '../services/menu/menu.service';
 import { UserData } from '../models/userdata.model';
+import swal from 'sweetalert';
 
 // se declara porq el init-plugins no es reconocido y existe:
 declare function init_plugins();
@@ -86,6 +86,7 @@ export class LoginComponent implements OnInit {
       // ALERT QUE YA SE REGISTRÓ
       console.log(this.user.email);
       console.log(this.user.password);
+      swal('Registro exitoso', 'Ya puede iniciar sesión con sus credenciales', 'info');
     })
     .catch((err) => console.log('error: ' + err));
   }
@@ -112,7 +113,6 @@ export class LoginComponent implements OnInit {
     // this.afauth.auth.signInWithPopup(new firebase.auth.FacebookAuthProvider())
     this.authService.signInWithFacebook()
     .then((res) => {
-<<<<<<< HEAD
       this.userData.userName = res.user.displayName;
       this._settingsService.setData(this.userData).subscribe(
         result => { // llamar no a un service si no hacer la petición directamente 
@@ -123,10 +123,6 @@ export class LoginComponent implements OnInit {
           console.log(<any>error);
         }
       );
-=======
-      console.log(res);
-      // this.addUser(res.user.displayName); // SE GUARDA EL USUARIO EN LA BD
->>>>>>> a7d9f82388c743d9f562d7ac208f3a26fdfad3c6
       this.ingresar();
     })
     .catch((err) => console.log('error: ' + err)); }

@@ -68,12 +68,9 @@ app.use(bodyParser.json());
 // importar rutas:
 var juegoRoutes = require('./routes/game');
 var appRoutes = require('./routes/app');
-// var usuariosRoutes = require('./routes/usuario');
 
 
 
-// rutas
-// esto es un middleware
 // cada vez que se haga una petición a esa ruta haga appRoutes
 
 app.use('/game', juegoRoutes);

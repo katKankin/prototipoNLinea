@@ -3,7 +3,6 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { GameService } from '../../services/service.index';
 import { Game } from '../../models/game.model';
 import { MenuService } from '../../services/service.index';
-import { stringify } from 'querystring';
 import { Router } from '@angular/router';
 @Component({
   selector: 'app-menu',
@@ -30,17 +29,15 @@ export class MenuComponent implements OnInit {
         console.log(<any>error);
       }
     );
-    // this.name = params;
   }
 
   ngOnInit() {
-    // this.showUserName();
     this.paint();
   }
   ingresar() {
     this.router.navigate(['/dashboard']);
   }
-  paint() { // RECIBE EL TAMAÑO DEL TABLERO: N X N //debería recibir el obj juego
+  paint() {
     const canvas1: any = document.getElementById('player1');
     const canvas2: any = document.getElementById('player2');
     canvas1.width = 1 * 90;  // VARIABLES QUE ACTUALIZAN LOS VALORES DEL CANVAS DE ACUERDO AL TAMAÑO DEL TABLERO
@@ -75,13 +72,15 @@ export class MenuComponent implements OnInit {
 
      }
    }
-   setGame() { // RECIBE EL TAMAÑO DEL TABLERO: N X N //debería recibir el obj juego
+   setGame() { 
     this._gaming.newGame(this.game).subscribe(
       result => {
         this.game.matrix = result.matrix;
         this.game.colorJ1 = result.colorJ1;
         this.game.colorJ2 = result.colorJ2;
         this.game.gameMode = result.gameMode;
+        console.log('Color1: ', result.colorJ1, );
+        console.log('Color2: ', result.colorJ2, );
         this.ingresar();
       },
       error => {
@@ -89,20 +88,5 @@ export class MenuComponent implements OnInit {
       }
 
     );
-    /* const canvas: any = document.getElementById('stage');
-    canvas.width = this.game.size * 90;  // VARIABLES QUE ACTUALIZAN LOS VALORES DEL CANVAS DE ACUERDO AL TAMAÑO DEL TABLERO
-    canvas.height = this.game.size * 90;
-        // se debe cambiar este ciclo x un ngFor y con una variable cargada desde el backend
-    if (canvas.getContext) {
-      const ctx = canvas.getContext('2d');
-      ctx.clearRect(0, 0, canvas.width, canvas.height); // LIMPIA EL CANVAS
-      for ( let i = 0; i <= this.game.size; i++) { // CICLO QUE SE ENCARGA DE INSERTAR CADA FICHA
-        for (let j = 0; j <= this.game.size; j++) {
-            ctx.strokeRect(i * 90, j * 90, 90, 90); // ES UNA FICHA CON FORMATO: (x,y,width,height)
-        }
-      }
-    } */
-    // console.log(stringify(this.game));
-
    }
 }
